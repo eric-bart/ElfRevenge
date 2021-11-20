@@ -1,11 +1,11 @@
-package personnages;
+package model;
 import javafx.scene.image.Image;import javafx.scene.image.ImageView;
 
 /**
  * Class du Lutin. Un lutin est une image qui va se trouver sur la map.
  */
-public class Elf extends ImageView {
-    private String skin;
+public class Lutin {
+	
     private boolean deplacementGauche;
     private boolean deplacementDroite;
     private boolean saut;
@@ -14,6 +14,7 @@ public class Elf extends ImageView {
     private static double VITESSE_DEPLACEMENT = 5;
     private double vitesseY = 0;
     private static double G = 0.02d;
+    private ImageView lutin;
 
     /**
      * Constructeur du lutin, ce constructeur détient une méthode "super" qui correspond au paramètre de l'extends ImageView.
@@ -22,11 +23,10 @@ public class Elf extends ImageView {
      * @param coordX
      * @param coordY
      */
-    public Elf(String skin, double coordX, double coordY) {
-        super(new Image(skin));
-        this.skin=skin;
-        this.setX(coordX);
-        this.setY(coordY);
+    public Lutin(ImageView lutin, double coordX, double coordY) {
+    	this.lutin = lutin;
+        lutin.setX(coordX);
+        lutin.setY(coordY);
         this.deplacementDroite=false;
         this.deplacementGauche=false;
         this.saut=false;
@@ -64,27 +64,23 @@ public class Elf extends ImageView {
         return this.vitesseY;
     }
 
-    /**public void saute() {
-        this.setY
-    }**/
-
     /**
      * Déplace le personnage sur la map.
      * @param background La map
      */
     public void seDeplace(ImageView background) {
         if(this.deplacementDroite) {
-            if(this.getX()+VITESSE_DEPLACEMENT>=background.getLayoutBounds().getMaxX()) {
-                this.setX(background.getLayoutBounds().getMaxX());
+            if(this.lutin.getX()+VITESSE_DEPLACEMENT>=background.getLayoutBounds().getMaxX()) {
+                this.lutin.setX(background.getLayoutBounds().getMaxX());
             } else {
-                this.setX(this.getX() + VITESSE_DEPLACEMENT);
+                this.lutin.setX(this.lutin.getX() + VITESSE_DEPLACEMENT);
             }
         }
         if(this.deplacementGauche) {
-            if(this.getX()-VITESSE_DEPLACEMENT<=background.getLayoutBounds().getMinX()) {
-                this.setX(background.getLayoutBounds().getMinX());
+            if(this.lutin.getX()-VITESSE_DEPLACEMENT<=background.getLayoutBounds().getMinX()) {
+                this.lutin.setX(background.getLayoutBounds().getMinX());
             } else {
-                this.setX(this.getX() - VITESSE_DEPLACEMENT);
+                this.lutin.setX(this.lutin.getX() - VITESSE_DEPLACEMENT);
             }
         }
     }
@@ -128,12 +124,8 @@ public class Elf extends ImageView {
     public boolean isDeplacementDroite() {
         return this.deplacementDroite;
     }
-
-    /**
-     * Retourne le chemin qui mène vers l'image du skin du Lutin.
-     * @return Chemin
-     */
-    public String getSkin() {
-        return this.skin;
+    
+    public ImageView getLutin() {
+    	return this.lutin;
     }
 }

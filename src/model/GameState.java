@@ -1,0 +1,5 @@
+package model;
+
+public enum GameState {
+    MENU, PARAMETRES, PAUSE, SELECT_NIVEAU, CUSTOMISATION, NIVEAU1, NIVEAU2, NIVEAU3
+}

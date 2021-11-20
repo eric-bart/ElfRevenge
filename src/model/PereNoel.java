@@ -1,4 +1,4 @@
-package personnages;
+package model;
 
 public class PereNoel {
     private String skin = "../media/personnage/perenoel.png";

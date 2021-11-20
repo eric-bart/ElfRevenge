@@ -1,4 +1,4 @@
-package personnages;
+package model;
 
 public class BonhommeDeNeige {
     private String skin = "../media/personnage/bonhomme";
