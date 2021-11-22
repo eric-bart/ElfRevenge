@@ -21,6 +21,9 @@ public class MenuController {
 		this.etat = GameState.MENU;
 	}
 
+	/**
+	 * Méthode qui met sous écoute les touches du claviers et change l'état du jeu en fonction de l'option du menu qui est sélectionnée
+	 */
 	public void menu() {
 		Menu menu = new Menu(this.root);
 		Orge orge = new Orge(menu.getOrge());

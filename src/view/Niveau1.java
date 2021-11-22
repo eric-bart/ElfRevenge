@@ -9,7 +9,12 @@ import javafx.scene.image.ImageView;
 
 public class Niveau1 {
 
-	private int generation[][] = 
+	/**
+	 * Tableau représentant la map qui va être générée
+	 * 0 = bloc de CIEL
+	 * 1 = bloc de SOL
+	 */
+	private int generationTab[][] = 
 		{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -17,35 +22,39 @@ public class Niveau1 {
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0}};
 
-	private ImageView background = new ImageView(new Image("background2.png"));
-	private ImageView elf = new ImageView(new Image("lutin4.png"));
+	private ImageView lutin = new ImageView(new Image("lutin4.png"));
 	private Group root;
 	private ArrayList<ImageView> colisionBlocks;
+	private ArrayList<ImageView> generatedMap;
 	private double coordX;
 	private double coordY;
 
 	public Niveau1(Group root) {
 		this.colisionBlocks = new ArrayList<ImageView>();
+		this.generatedMap = new ArrayList<ImageView>();
 		this.root = root;
 		root.getChildren().clear();
-		//root.getChildren().addAll(this.background, this.elf);
 		this.coordX=0.0;
 		this.coordY=0.0;
 		this.generateLevel();
 		this.getColisionBlocks();
 	}
-
+	
+	/**
+	 * Fonction permettant de placer les blocs sur notre vue suivant la disposition définie sur la variable "generationTab"
+	 */
 	public void generateLevel() {
-		for(int i=0; i<this.generation.length; i++) {
-			for(int j=0;j<this.generation[i].length; j++) {
-				String fond = getImageType(this.generation[i][j]);
+		for(int i=0; i<this.generationTab.length; i++) {
+			for(int j=0;j<this.generationTab[i].length; j++) {
+				String fond = getImageType(this.generationTab[i][j]);
 				ImageView image = new ImageView(new Image(fond));
 				root.getChildren().add(image);
+				this.generatedMap.add(image);
 				addBlockToList(fond, image);
 				image.setX(this.coordX);
 				image.setY(this.coordY);
@@ -55,10 +64,15 @@ public class Niveau1 {
 			this.coordX=0;
 			this.coordY+=64;
 		}
-		root.getChildren().add(this.elf);
+		root.getChildren().add(this.lutin);
 		System.out.println(root.getChildren().get(0));
 	}
 
+	/**
+	 * Fonction retournant le nom de l'image à placer sur notre vue, en fonction du chiffre qui a été défini sur la variable "generationTab"
+	 * @param chiffre un chiffre qui a été défini sur la variable "generationTab"
+	 * @return String le nom de l'image à placer
+	 */
 	public String getImageType(int chiffre) {
 		switch(chiffre) {
 		case 0:
@@ -72,6 +86,11 @@ public class Niveau1 {
 		}
 	}
 	
+	/**
+	 * Fonction permettant d'ajouter les blocks de type "sol" à notre liste de blocks de sol
+	 * @param fond le nom de l'image à vérifier
+	 * @param image l'image à ajouter dans le cas où son nom correspond à un block de type sol
+	 */
 	public void addBlockToList(String fond, ImageView image) {
 		switch(fond) {
 		case "sol.png":
@@ -80,19 +99,27 @@ public class Niveau1 {
 		}
 	}
 	
+	/**
+	 * Retourne notre liste de blocks qui soumettent notre lutin à une colision
+	 * @return la liste de blocks
+	 */
 	public ArrayList getColisionBlocks() {
-		for(int i=0;i<this.colisionBlocks.size();i++) {
-			ImageView image = this.colisionBlocks.get(i);
-			System.out.println("Cordonnées de " + image + " : " + image.getLayoutBounds().getMinX() + ";" + image.getLayoutBounds().getMaxX());
-		}
 		return this.colisionBlocks;
 	}
-
-	public ImageView getBackground() {
-		return this.background;
+	
+	/**
+	 * Retourne l'image du lutin contenu sur la vue
+	 * @return l'image du ltuin
+	 */
+	public ImageView getLutin() {
+		return this.lutin;
 	}
-
-	public ImageView getElf() {
-		return this.elf;
+	
+	/**
+	 * Retourne la liste des images contenues sur notre vue sous la forme d'une liste
+	 * @return la liste d'images
+	 */
+	public ArrayList<ImageView> getGeneration() {
+		return this.generatedMap;
 	}
 }

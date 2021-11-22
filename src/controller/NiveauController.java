@@ -23,6 +23,9 @@ public class NiveauController {
 		this.niveauController();
 	}
 
+	/**
+	 * MÈthode rÈdirigeant vers un niveau en fonction de l'Ètat sur lequel se trouve le jeu.
+	 */
 	public void niveauController() {
 		switch(etat) {
 		case NIVEAU1:
@@ -32,8 +35,14 @@ public class NiveauController {
 		}
 	}
 
+	/**
+	 * MÈthode mettant en place l'Ècoute des touches du clavier pour le dÈplacement du lutin
+	 * Cette mÈthode permet Ègalement de gÈrer les cas de colision du lutin avec les blocks "solides"
+	 *!\ A REFACTORER /!
+	 * @param niveau
+	 */
 	public void deplacement(Niveau1 niveau) {
-		Lutin lutin = new Lutin(niveau.getElf(), 0, 300);
+		Lutin lutin = new Lutin(niveau.getLutin(), 0, 300);
 		ArrayList<ImageView> solidBricks = niveau.getColisionBlocks();
 		try {
 			AnimationTimer boucle = new AnimationTimer() {
@@ -64,10 +73,10 @@ public class NiveauController {
 					}
 					//Deplacement de l'elf
 					if (lutin.isDeplacementDroite()) {
-						lutin.seDeplace();
+						lutin.seDeplace(niveau);
 					}
 					if (lutin.isDeplacementGauche()) {
-						lutin.seDeplace();
+						lutin.seDeplace(niveau);
 					}
 				}
 			};
@@ -78,8 +87,6 @@ public class NiveauController {
 					break;
 				case RIGHT:
 					lutin.setDeplacementDroite(true);
-					break;
-				default:
 					break;
 				}
 			});
@@ -92,16 +99,6 @@ public class NiveauController {
 				case RIGHT:
 					lutin.setDeplacementDroite(false);
 					break;
-					/**case SPACE:
-                     if(!personnageElf.isSaut()) {
-                     personnageElf.setSaut(true);
-                     personnageElf.setTimerSaut(25);
-                     personnageElf.setVitesseY(personnageElf.getVitesseY()-personnageElf.getVITESSESAUT());
-                     } else {
-                     System.out.println("Il est d√©j√† entrain de sauter la!!!!!!!");
-                     }**/
-				default:
-					break;
 				}
 			});
 			
@@ -109,73 +106,5 @@ public class NiveauController {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		/**try {
-			AnimationTimer boucle = new AnimationTimer() {
-				@Override
-				public void handle(long l) {
-					//Gravit√© de l'elf.
-					if (lutin.getLutin().getY() < background.getLayoutBounds().getMaxY() * 0.7d) {
-						if (!lutin.isSaut()) {
-							lutin.getLutin().setY(lutin.getLutin().getY() + lutin.getVitesseY());
-							lutin.setVitesseY(lutin.getVitesseY() + lutin.getG());
-						}
-					}
-					if (lutin.getLutin().getY() > background.getLayoutBounds().getMaxY() * 0.7d) {
-						lutin.getLutin().setY(background.getLayoutBounds().getMaxY() * 0.7d);
-					}
-
-					//Deplacement de l'elf
-					if (lutin.isDeplacementDroite()) {
-						lutin.seDeplace(background);
-					}
-					if (lutin.isDeplacementGauche()) {
-						lutin.seDeplace(background);
-					}
-
-					/**if(personnageElf.isSaut()) {
-                     for(int i=personnageElf.getTimerSaut();i>0;i--) {
-                     personnageElf.setY(personnageElf.getY() - personnageElf.getVitesseY());
-                     }
-                     personnageElf.setSaut(false);
-                     }
-				}
-			};
-			scene.setOnKeyPressed(e -> {
-				switch (e.getCode()) {
-				case LEFT:
-					lutin.setDeplacementGauche(true);
-					break;
-				case RIGHT:
-					lutin.setDeplacementDroite(true);
-					break;
-				default:
-					break;
-				}
-			});
-			scene.setOnKeyReleased(e -> {
-				switch (e.getCode()) {
-				case LEFT:
-					lutin.setDeplacementGauche(false);
-					break;
-				case RIGHT:
-					lutin.setDeplacementDroite(false);
-					break;
-					/**case SPACE:
-                     if(!personnageElf.isSaut()) {
-                     personnageElf.setSaut(true);
-                     personnageElf.setTimerSaut(25);
-                     personnageElf.setVitesseY(personnageElf.getVitesseY()-personnageElf.getVITESSESAUT());
-                     } else {
-                     System.out.println("Il est d√©j√† entrain de sauter la!!!!!!!");
-                     }
-				default:
-					break;
-				}
-			});
-			boucle.start();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}**/
 	}
 }

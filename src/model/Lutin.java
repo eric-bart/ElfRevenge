@@ -1,11 +1,8 @@
 package model;
-import java.util.ArrayList;
 
-import javafx.scene.image.Image;import javafx.scene.image.ImageView;
+import javafx.scene.image.ImageView;
+import view.Niveau1;
 
-/**
- * Class du Lutin. Un lutin est une image qui va se trouver sur la map.
- */
 public class Lutin {
 
 	private boolean deplacementGauche;
@@ -19,9 +16,8 @@ public class Lutin {
 	private ImageView lutin;
 
 	/**
-	 * Constructeur du lutin, ce constructeur dÃ©tient une mÃ©thode "super" qui correspond au paramÃ¨tre de l'extends ImageView.
-	 * Ce paramÃ¨tre est le chemin qui mÃ¨ne vers le skin du lutin.
-	 * @param skin
+	 * Construit un lutin détenant une certaine coordonnée et un ImageView qui correspond à sa représentation sur la vue.
+	 * @param lutin
 	 * @param coordX
 	 * @param coordY
 	 */
@@ -34,81 +30,112 @@ public class Lutin {
 		this.saut=false;
 	}
 
+	/**
+	 * Retourne la vitesse de saut du lutin
+	 * @return double la vitesse de saut du lutin
+	 */
 	public double getVITESSESAUT() {
 		return VITESSESAUT;
 	}
-
+	
+	
+	/**
+	 * Retourne la valeur du timer qui permet de gérer le saut du lutin
+	 * @return int la valeur du timer qui permet de gérer le saut du lutin
+	 */
 	public int getTimerSaut() {
 		return this.timerSaut;
 	}
-
+	
+	/**
+	 * Permet de mettre à jour la valeur du timer de saut du lutin
+	 * @param timerSaut
+	 */
 	public void setTimerSaut(int timerSaut) {
 		this.timerSaut = timerSaut;
 	}
 
+	
+	/**
+	 * Permet de mettre à jour si le lutin est entrain de sauter ou non
+	 * @param saut boolean true=Le lutin est entrain de sauter ; false=Le lutin n'est pas entrain de sauter
+	 */
 	public void setSaut(boolean saut) {
 		this.saut = saut;
 	}
 
+	/**
+	 * Retourne si le lutin est entrain de sauter ou non
+	 * @return boolean true=Le lutin est entrain de sauter ; false=Le lutin n'est pas entrain de sauter
+	 */
 	public boolean isSaut() {
 		return this.saut;
 	}
 
+	/**
+	 * Permet de récupérer la valeur de gravité du lutin
+	 * @return double la valeur de gravité du lutin
+	 */
 	public double getG() {
 		return G;
 	}
 
+	/**
+	 * Permet de mettre à jour la vitesse en Y du lutin
+	 * @param vitesseY
+	 */
 	public void setVitesseY(double vitesseY) {
 		this.vitesseY = vitesseY;
 	}
-
+	
+	/**
+	 * Permet de récupérer la vitesse du lutin en Y (haut/bas)
+	 * @return double la vitesse en Y du lutin
+	 */
 	public double getVitesseY() {
 		return this.vitesseY;
 	}
 
 	/**
-	 * DÃ©place le personnage sur la map.
-	 * @param background La map
+	 * Déplace le personnage sur le niveau
+	 * @param niveau Le niveau concerné
 	 */
-	public void seDeplace() {
-		/**if(this.deplacementDroite) {
-			if(this.lutin.getX()+VITESSE_DEPLACEMENT>=background.getLayoutBounds().getMaxX()) {
-				this.lutin.setX(background.getLayoutBounds().getMaxX());
-			} else {
-				this.lutin.setX(this.lutin.getX() + VITESSE_DEPLACEMENT);
-			}
-		}
-		if(this.deplacementGauche) {
-			if(this.lutin.getX()-VITESSE_DEPLACEMENT<=background.getLayoutBounds().getMinX()) {
-				this.lutin.setX(background.getLayoutBounds().getMinX());
-			} else {
-				this.lutin.setX(this.lutin.getX() - VITESSE_DEPLACEMENT);
-			}
-		}**/
+	public void seDeplace(Niveau1 niveau) {
+		//Si le personnage se déplace à droite alors on recupère la position maximum de la map à droite et on regarde s'il peut avancer.
 		if(this.deplacementDroite) {
+			if(this.lutin.getX()+VITESSE_DEPLACEMENT>=niveau.getGeneration().get(niveau.getGeneration().size()-1).getLayoutBounds().getMaxX()) {
+				this.lutin.setX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getLayoutBounds().getMinX());
+			} else {
 				this.lutin.setX(this.lutin.getX() + VITESSE_DEPLACEMENT);
+			}
 		}
+		//Si le personnage se déplace à gauche alors on recupère la position maximum de la map à gauche et on regarde s'il peut avancer.
 		if(this.deplacementGauche) {
+			if(this.lutin.getX()+VITESSE_DEPLACEMENT<=niveau.getGeneration().get(0).getLayoutBounds().getMinX()) {
+				this.lutin.setX(niveau.getGeneration().get(0).getLayoutBounds().getMinX());
+			} else {
 				this.lutin.setX(this.lutin.getX() - VITESSE_DEPLACEMENT);
+			}
 		}
 	}
 	
 	
+	/**
+	 * Vérifie si le personnage est dans le vide ou pas.
+	 * Vide = Ne pas être sur un block
+	 * @param block Le block sur lequel le lutin se trouve en X
+	 * @return boolean true=Le lutin est dans le vide ; false=Le lutin n'est pas dans le vide
+	 */
 	public boolean isDansLeCiel(ImageView block) {
 		return this.lutin.getLayoutBounds().getMaxY()<block.getLayoutBounds().getMinY() 
-				||  this.lutin.getLayoutBounds().getMaxY()>block.getLayoutBounds().getMaxY();
-	}
-	
-	public boolean isSurSol(ImageView block) {
-		return this.lutin.getLayoutBounds().getMaxY()<=block.getLayoutBounds().getMaxY() 
-				&& this.lutin.getLayoutBounds().getMaxY()>=block.getLayoutBounds().getMinY()
-				&& this.lutin.getLayoutBounds().getMinX()>=block.getLayoutBounds().getMinX()
-				&& this.lutin.getLayoutBounds().getMinX()<=block.getLayoutBounds().getMaxX();
+				||  this.lutin.getLayoutBounds().getMaxY()>block.getLayoutBounds().getMaxY()
+				&& (!(this.lutin.getLayoutBounds().getMinY()>block.getLayoutBounds().getMaxY())
+				|| this.lutin.getLayoutBounds().getMinY()<block.getLayoutBounds().getMinX());
 	}
 
 	/**
-	 * Retourne la vitesse de dÃ©placement du lutin
-	 * @return
+	 * Retourne la vitesse de déplacement du lutin
+	 * @return double la vitesse de déplacement du lutin
 	 */
 	public double getVitesseDeplacement() {
 		return VITESSE_DEPLACEMENT;
@@ -131,21 +158,25 @@ public class Lutin {
 	}
 
 	/**
-	 * Retourne un booleen qui informe si le lutin se dÃ©place vers la gauche ou pas
-	 * @return true si il se dÃ©place vers la gauche, sinon false
+	 * Retourne un booleen qui informe si le lutin se déplace vers la gauche ou pas
+	 * @return boolean true=Le lutin se déplace vers la gauche ; false=Le lutin ne se déplace pas vers la gauche
 	 */
 	public boolean isDeplacementGauche() {
 		return this.deplacementGauche;
 	}
 
 	/**
-	 * Retourne un booleen qui informe si le lutin se dÃ©place vers la droite ou pas
-	 * @return true si il se dÃ©place vers la droite, sinon false
+	 * Retourne un booleen qui informe si le lutin se déplace vers la gauche ou pas
+	 * @return boolean true=Le lutin se déplace vers la droite ; false=Le lutin ne se déplace pas vers la droite
 	 */
 	public boolean isDeplacementDroite() {
 		return this.deplacementDroite;
 	}
 
+	/**
+	 * Retourne l'image du lutin sur la vue
+	 * @return ImageView l'image du lutin
+	 */
 	public ImageView getLutin() {
 		return this.lutin;
 	}

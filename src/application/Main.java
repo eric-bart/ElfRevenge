@@ -48,7 +48,7 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Cette fonction permet de gérer le changement d'état du jeu
+	 * Cette fonction permet de rediriger vers d'autres vues et controlleurs en fonction de l'état du jeu.
 	 */
 	public static void changeGameState() {
 		switch(etat) {
@@ -97,6 +97,10 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Fonction permettant de changer l'état du jeu
+	 * @param state l'état du jeu dans lequel on souhaite le changer
+	 */
 	public static void setGameState(GameState state) {
 		etat = state;
 		changeGameState();

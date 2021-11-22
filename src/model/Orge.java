@@ -8,6 +8,10 @@ public class Orge {
 	private ImageView orge;
 	private int selectedOpt;
 
+	/**
+	 * Constructeur du sucre d'orge, ce qui correspond au sélecteur sur le menu du jeu
+	 * @param orge
+	 */
 	public Orge(ImageView orge) {
 		this.orge = orge;
 		this.orgeAnimation();
@@ -22,19 +26,19 @@ public class Orge {
 		int selectedOpt = this.selectedOpt;
 		switch(selectedOpt) {
 		case 0:
+			//Le sucre d'orge pointe sur "jouer"
 			this.orge.setY(295);
 			this.orge.setX(495);
-			System.out.println("Le sucre doit être en position 0");
 			break;
 		case 1:
+			//Le sucre d'orge pointe sur "customisation"
 			this.orge.setY(370);
 			this.orge.setX(410);
-			System.out.println("Le sucre doit être en position 1");
 			break;
 		case 2:
+			//Le sucre d'orge pointe sur "paramètres"
 			this.orge.setY(450);
 			this.orge.setX(470);
-			System.out.println("Le sucre doit être en position 2");
 			break;
 		}
 	}
@@ -48,13 +52,17 @@ public class Orge {
 	}
 
 	/**
-	 * Retourne l'itération de l'option correspondant au tableau d'options
+	 * Retourne l'itération du tableau options
 	 * @return l'itération (0 = JOUER, 1 = CUSTOMISATION, 2 = OPTIONS)
 	 */
 	public int getSelectedOpt() {
 		return this.selectedOpt;
 	}
 
+	/**
+	 * Permet de mettre à jour l'itération du tableau "options" sur laquelle l'utilisateur pointe
+	 * @param opt l'itération (0 = JOUER, 1 = CUSTOMISATION, 2 = OPTIONS)
+	 */
 	public void setSelectedOpt(int opt) {
 		this.selectedOpt=opt;
 	}
