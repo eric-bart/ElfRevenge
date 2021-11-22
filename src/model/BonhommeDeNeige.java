@@ -1,13 +1,13 @@
 package model;
 
 public class BonhommeDeNeige {
-    private String skin = "../media/personnage/bonhomme";
+	private String skin = "../media/personnage/bonhomme";
 
-    public BonhommeDeNeige() {
+	public BonhommeDeNeige() {
 
-    }
+	}
 
-    private String getSkin() {
-        return this.skin;
-    }
+	private String getSkin() {
+		return this.skin;
+	}
 }
