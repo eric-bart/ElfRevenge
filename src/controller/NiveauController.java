@@ -35,7 +35,6 @@ public class NiveauController {
 		}
 	}
 
-<<<<<<< Updated upstream
 	/**
 	 * Méthode mettant en place l'écoute des touches du clavier pour le déplacement du lutin
 	 * Cette méthode permet également de gérer les cas de colision du lutin avec les blocks "solides"
@@ -96,51 +95,6 @@ public class NiveauController {
 				switch (e.getCode()) {
 				case LEFT:
 					lutin.setDeplacementGauche(false);
-=======
-                    /**if(personnageElf.isSaut()) {
-                     for(int i=personnageElf.getTimerSaut();i>0;i--) {
-                     personnageElf.setY(personnageElf.getY() - personnageElf.getVitesseY());
-                     }
-                     personnageElf.setSaut(false);
-                     }**/
-                }
-            };
-            scene.setOnKeyPressed(e -> {
-                switch (e.getCode()) {
-                    case LEFT:
-                        lutin.setDeplacementGauche(true);
-                        break;
-                    case RIGHT:
-                        lutin.setDeplacementDroite(true);
-                        break;
-                    case SPACE:
-                    	lutin.setSaut(true);
-                    	break;
-                    default:
-					break;
-                }
-            });
-            scene.setOnKeyReleased(e -> {
-                switch (e.getCode()) {
-                    case LEFT:
-                        lutin.setDeplacementGauche(false);
-                        break;
-                    case RIGHT:
-                        lutin.setDeplacementDroite(false);
-                        break;
-                    case SPACE:
-                    	lutin.setSaut(true);
-                    	break;
-                    /**case SPACE:
-                     if(!personnageElf.isSaut()) {
-                     personnageElf.setSaut(true);
-                     personnageElf.setTimerSaut(25);
-                     personnageElf.setVitesseY(personnageElf.getVitesseY()-personnageElf.getVITESSESAUT());
-                     } else {
-                     System.out.println("Il est dÃ©jÃ  entrain de sauter la!!!!!!!");
-                     }**/
-				default:
->>>>>>> Stashed changes
 					break;
 				case RIGHT:
 					lutin.setDeplacementDroite(false);
