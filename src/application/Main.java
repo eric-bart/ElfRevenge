@@ -40,7 +40,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		changeGameState();
-		scene.setFill(Color.web("9bbeff"));
+		//scene.setFill(Color.web("9bbeff"));
 		primaryStage.setTitle("ElfsRevenge");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 import javafx.scene.image.ImageView;
 import view.Niveau1;
 
@@ -7,6 +9,8 @@ public class Lutin {
 
 	private boolean deplacementGauche;
 	private boolean deplacementDroite;
+	private boolean colisionDroite;
+	private boolean colisionGauche;
 	private boolean saut;
 	private int timerSaut;
 	private static double VITESSESAUT = 0.01d;
@@ -27,6 +31,8 @@ public class Lutin {
 		lutin.setY(coordY);
 		this.deplacementDroite=false;
 		this.deplacementGauche=false;
+		this.colisionDroite=false;
+		this.colisionGauche=false;
 		this.saut=false;
 	}
 
@@ -103,22 +109,45 @@ public class Lutin {
 	public void seDeplace(Niveau1 niveau) {
 		//Si le personnage se déplace à droite alors on recupère la position maximum de la map à droite et on regarde s'il peut avancer.
 		if(this.deplacementDroite) {
-			if(this.lutin.getX()+VITESSE_DEPLACEMENT>=niveau.getGeneration().get(niveau.getGeneration().size()-1).getLayoutBounds().getMaxX()) {
-				this.lutin.setX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getLayoutBounds().getMinX());
+			if(this.lutin.getX()+VITESSE_DEPLACEMENT>=niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMaxX()) {
+				this.lutin.setX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMinX());
 			} else {
 				this.lutin.setX(this.lutin.getX() + VITESSE_DEPLACEMENT);
 			}
 		}
 		//Si le personnage se déplace à gauche alors on recupère la position maximum de la map à gauche et on regarde s'il peut avancer.
 		if(this.deplacementGauche) {
-			if(this.lutin.getX()+VITESSE_DEPLACEMENT<=niveau.getGeneration().get(0).getLayoutBounds().getMinX()) {
-				this.lutin.setX(niveau.getGeneration().get(0).getLayoutBounds().getMinX());
+			if(this.lutin.getX()+VITESSE_DEPLACEMENT<=niveau.getGeneration().get(0).getBlock().getLayoutBounds().getMinX()) {
+				this.lutin.setX(niveau.getGeneration().get(0).getBlock().getLayoutBounds().getMinX());
 			} else {
 				this.lutin.setX(this.lutin.getX() - VITESSE_DEPLACEMENT);
 			}
 		}
 	}
 	
+	public boolean isColisionGauche(Block image) {
+		return this.lutin.getLayoutBounds().getMinX()>=image.getBlock().getLayoutBounds().getMinX() 
+				&& this.lutin.getLayoutBounds().getMinX()<= image.getBlock().getLayoutBounds().getMaxX()
+				&& this.lutin.getLayoutBounds().getMinY()<=image.getBlock().getLayoutBounds().getMaxY()
+				&& this.lutin.getLayoutBounds().getMaxY()>=image.getBlock().getLayoutBounds().getMinY()
+				&& image.isHardBlock();
+	}
+	
+	public boolean isColisionDroite(Block image) {
+		return this.lutin.getLayoutBounds().getMaxX()>=image.getBlock().getLayoutBounds().getMinX() 
+				&& this.lutin.getLayoutBounds().getMaxX() <= image.getBlock().getLayoutBounds().getMaxX()
+				&& this.lutin.getLayoutBounds().getMinY()<=image.getBlock().getLayoutBounds().getMaxY()
+				&& this.lutin.getLayoutBounds().getMaxY()>=image.getBlock().getLayoutBounds().getMinY()
+				&& image.isHardBlock();
+	}
+	
+	public boolean isColisionDessus(Block image) {
+		return this.lutin.getLayoutBounds().getMinX()>=image.getBlock().getLayoutBounds().getMinX() 
+				&& this.lutin.getLayoutBounds().getMinX()<=image.getBlock().getLayoutBounds().getMaxX()
+				|| this.lutin.getLayoutBounds().getMaxX()>=image.getBlock().getLayoutBounds().getMinX() 
+				&& this.lutin.getLayoutBounds().getMaxX()<=image.getBlock().getLayoutBounds().getMaxX()
+				&& image.isHardBlock();
+	}
 	
 	/**
 	 * Vérifie si le personnage est dans le vide ou pas.
@@ -126,11 +155,107 @@ public class Lutin {
 	 * @param block Le block sur lequel le lutin se trouve en X
 	 * @return boolean true=Le lutin est dans le vide ; false=Le lutin n'est pas dans le vide
 	 */
-	public boolean isDansLeCiel(ImageView block) {
-		return this.lutin.getLayoutBounds().getMaxY()<block.getLayoutBounds().getMinY() 
+	public boolean isDansLeCiel(Block block) {
+		
+		//Si le lutin a les pieds dans le vide
+		//ou si le lutin a les pieds dans 
+		/**return this.lutin.getLayoutBounds().getMaxY()<block.getLayoutBounds().getMinY() 
 				||  this.lutin.getLayoutBounds().getMaxY()>block.getLayoutBounds().getMaxY()
 				&& (!(this.lutin.getLayoutBounds().getMinY()>block.getLayoutBounds().getMaxY())
-				|| this.lutin.getLayoutBounds().getMinY()<block.getLayoutBounds().getMinX());
+				|| this.lutin.getLayoutBounds().getMinY()<block.getLayoutBounds().getMinX());**/
+		return this.lutin.getLayoutBounds().getMaxY()<block.getBlock().getLayoutBounds().getMinY()
+				|| this.lutin.getLayoutBounds().getMinY()<block.getBlock().getLayoutBounds().getMaxY() 
+				&& this.lutin.getLayoutBounds().getMaxY()<block.getBlock().getLayoutBounds().getMinY();
+	}
+	
+	/**
+	 * Retourne le bloc actuel dans lequel se trouve le lutin
+	 * @param niveau
+	 * @return ImageView le bloc sur lequel se trouve le lutin
+	 */
+	public Block blocActuelLutin(Niveau1 niveau) {
+		if(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize
+				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
+			return niveau.getGeneration().get(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize
+				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length));
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Retourne le bloc situé en dessous du lutin
+	 * @param niveau
+	 * @return ImageView le bloc situé en dessous du lutin
+	 */
+	public Block blocDessousLutin(Niveau1 niveau) {
+		if(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize 
+				+ (((int) this.lutin.getLayoutBounds().getCenterY() + Block.blockXSize)/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
+			return niveau.getGeneration().get(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize 
+				+ (((int) this.lutin.getLayoutBounds().getCenterY() + Block.blockXSize)/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length));
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Retourne le bloc situé à droite du lutin
+	 * @param niveau
+	 * @return ImageView le bloc situé à droite du lutin
+	 */
+	public Block blocDroiteLutin(Niveau1 niveau) {
+		if((((int) this.lutin.getLayoutBounds().getCenterX()+Block.blockXSize)/Block.blockXSize 
+				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
+			return niveau.getGeneration().get((((int) this.lutin.getLayoutBounds().getCenterX()+Block.blockXSize)/Block.blockXSize 
+				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length));
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Retourne le bloc situé à gauche du lutin
+	 * @param niveau
+	 * @return ImageView le bloc situé à gauche du lutin
+	 */
+	public Block blocGaucheLutin(Niveau1 niveau) {
+		if((((int) this.lutin.getLayoutBounds().getCenterX()-Block.blockXSize)/Block.blockXSize
+				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
+			return niveau.getGeneration().get((((int) this.lutin.getLayoutBounds().getCenterX()-Block.blockXSize)/Block.blockXSize
+				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length));
+		} else {
+			return null;
+		}
+	}
+	
+	
+	
+	
+	/**
+	 * Retourne la ligne de blocs sur lequel le lutin se trouve
+	 * @param niveau
+	 * @return ArrayList<ImageView> La liste de blocks sur laquelle le lutin se trouve
+	 */
+	public ArrayList<Block> ligneBlockLutin(Niveau1 niveau) {
+		ArrayList<Block> listeBlockLigne = new ArrayList<Block>();
+		int res = 0;
+		for(int i=0;i<(int) this.lutin.getLayoutBounds().getCenterY()/Block.blockXSize * niveau.getGenerationMap()[0].length;i+=niveau.getGenerationMap()[0].length) {
+			res = (int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize + i;
+			//System.out.println("Ajout du bloc " + res);
+			if(niveau.getColisionBlocks().contains(niveau.getGeneration().get((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize + i))) {
+				listeBlockLigne.add(niveau.getGeneration().get((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize + i));
+			}
+			
+		}
+		return listeBlockLigne;
 	}
 
 	/**

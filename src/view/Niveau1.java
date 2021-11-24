@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import model.Block;
+import model.SolidBlock;
+import model.TransparentBlock;
 
 public class Niveau1 {
 
@@ -18,25 +21,26 @@ public class Niveau1 {
 		{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0},
+			{0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0}};
+			{0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 	private ImageView lutin = new ImageView(new Image("lutin4.png"));
 	private Group root;
-	private ArrayList<ImageView> colisionBlocks;
-	private ArrayList<ImageView> generatedMap;
+	private ArrayList<Block> colisionBlocks;
+	private ArrayList<Block> generatedMap;
 	private double coordX;
 	private double coordY;
 
 	public Niveau1(Group root) {
-		this.colisionBlocks = new ArrayList<ImageView>();
-		this.generatedMap = new ArrayList<ImageView>();
+		this.colisionBlocks = new ArrayList<Block>();
+		this.generatedMap = new ArrayList<Block>();
 		this.root = root;
 		root.getChildren().clear();
 		this.coordX=0.0;
@@ -51,15 +55,13 @@ public class Niveau1 {
 	public void generateLevel() {
 		for(int i=0; i<this.generationTab.length; i++) {
 			for(int j=0;j<this.generationTab[i].length; j++) {
-				String fond = getImageType(this.generationTab[i][j]);
-				ImageView image = new ImageView(new Image(fond));
-				root.getChildren().add(image);
-				this.generatedMap.add(image);
-				addBlockToList(fond, image);
-				image.setX(this.coordX);
-				image.setY(this.coordY);
+				Block newBlock = getImageType(this.generationTab[i][j]);
+				root.getChildren().add(newBlock.getBlock());
+				this.generatedMap.add(newBlock);
+				addBlockToList(newBlock);
+				newBlock.getBlock().setX(this.coordX);
+				newBlock.getBlock().setY(this.coordY);
 				this.coordX+=64;
-				System.out.println("On ajoute "+fond);
 			}
 			this.coordX=0;
 			this.coordY+=64;
@@ -73,16 +75,16 @@ public class Niveau1 {
 	 * @param chiffre un chiffre qui a été défini sur la variable "generationTab"
 	 * @return String le nom de l'image à placer
 	 */
-	public String getImageType(int chiffre) {
+	public Block getImageType(int chiffre) {
 		switch(chiffre) {
 		case 0:
-			return "ciel.png";
+			return new TransparentBlock("ciel.png");
 		case 1:
-			return "sol.png";
+			return new SolidBlock("sol.png");
 		case 2:
-			return "ciel.png";
+			return new TransparentBlock("ciel.png");
 		default:
-			return "";
+			return new TransparentBlock("ciel.png");
 		}
 	}
 	
@@ -91,11 +93,9 @@ public class Niveau1 {
 	 * @param fond le nom de l'image à vérifier
 	 * @param image l'image à ajouter dans le cas où son nom correspond à un block de type sol
 	 */
-	public void addBlockToList(String fond, ImageView image) {
-		switch(fond) {
-		case "sol.png":
-			this.colisionBlocks.add(image);
-			break;
+	public void addBlockToList(Block block) {
+		if(block.isHardBlock()) {
+			this.colisionBlocks.add(block);
 		}
 	}
 	
@@ -119,7 +119,14 @@ public class Niveau1 {
 	 * Retourne la liste des images contenues sur notre vue sous la forme d'une liste
 	 * @return la liste d'images
 	 */
-	public ArrayList<ImageView> getGeneration() {
+	public ArrayList<Block> getGeneration() {
 		return this.generatedMap;
+	}
+	
+	/**
+	 * Retourne le tableau de génération de notre map
+	 */
+	public int[][] getGenerationMap() {
+		return this.generationTab;
 	}
 }
