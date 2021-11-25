@@ -208,7 +208,15 @@ public class Lutin {
 		}
 	}
 	
+	public void sauter(Niveau1 niveau) {
+		if (!(/*this.isColisionDessus(this.blocDessusLutin(niveau)||*/this.isColisionDroite(this.blocDroiteLutin(niveau))||this.isColisionGauche(this.blocGaucheLutin(niveau))||this.isDansLeCiel(niveau))) {
+			this.lutin.setY(this.lutin.getY()-150d);
+			this.setVitesseY(1.6d);
+		}
+	}
 	
+	
+
 	public boolean isColisionGauche(Block image) {
 		return this.lutin.getLayoutBounds().getMinX()>=image.getBlock().getLayoutBounds().getMinX() 
 				&& this.lutin.getLayoutBounds().getMinX()<= image.getBlock().getLayoutBounds().getMaxX()
@@ -289,6 +297,12 @@ public class Lutin {
 			return null;
 		}
 	}
+	///////////////////////////////////////////////////////////////////////////////////////////////////////// 
+	/*
+	private Block blocDessusLutin(Niveau1 niveau) {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
 	
 	/**
 	 * Retourne le bloc situé à droite du lutin

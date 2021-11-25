@@ -78,7 +78,11 @@ public class NiveauController {
 					} else {
 						lutin.tombe(niveau);
 					}
+					if (lutin.isSaut()) {
+						lutin.sauter(niveau);
+					}
 				}
+				
 			};
 			
 			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -93,6 +97,9 @@ public class NiveauController {
 						break;
 					case RIGHT:
 						lutin.setDeplacementDroite(true);
+						break;
+					case SPACE:
+						lutin.setSaut(true);
 						break;
 					case ESCAPE:
 						boucle.stop();
@@ -114,6 +121,9 @@ public class NiveauController {
 						break;
 					case RIGHT:
 						lutin.setDeplacementDroite(false);
+						break;
+					case SPACE:
+						lutin.setSaut(false);
 						break;
 					}
 				}
