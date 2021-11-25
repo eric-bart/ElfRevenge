@@ -27,6 +27,8 @@ public class MenuController {
 	public void menu() {
 		Menu menu = new Menu(this.root);
 		Orge orge = new Orge(menu.getOrge());
+		
+		double margeDeCote;
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {
@@ -59,7 +61,6 @@ public class MenuController {
 					}
 					break;
 				}
-
 			}
 		});
 	}

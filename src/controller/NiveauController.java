@@ -3,12 +3,17 @@ package controller;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import model.GameState;
 import model.Lutin;
 import view.Niveau1;
+import application.Main;
 
 public class NiveauController {
 
@@ -42,7 +47,7 @@ public class NiveauController {
 	 * @param niveau
 	 */
 	public void deplacement(Niveau1 niveau) {
-		Lutin lutin = new Lutin(niveau.getLutin(), 0, 300);
+		Lutin lutin = new Lutin(niveau.getLutin(), 0, 400);
 		try {
 			AnimationTimer boucle = new AnimationTimer() {
 				@Override
@@ -75,25 +80,42 @@ public class NiveauController {
 					}
 				}
 			};
-			this.scene.setOnKeyPressed(e-> {
-				switch (e.getCode()) {
-				case LEFT:
-					lutin.setDeplacementGauche(true);
-					break;
-				case RIGHT:
-					lutin.setDeplacementDroite(true);
-					break;
+			
+			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+				@Override
+				public void handle(KeyEvent keyEvent) {
+					if(keyEvent.getCode() == KeyCode.ESCAPE) {
+						keyEvent.consume();
+					}
+					switch (keyEvent.getCode()) {
+					case LEFT:
+						lutin.setDeplacementGauche(true);
+						break;
+					case RIGHT:
+						lutin.setDeplacementDroite(true);
+						break;
+					case ESCAPE:
+						boucle.stop();
+						Main.setGameState(GameState.PAUSE);
+						break;
+					}
 				}
 			});
 			
-			this.scene.setOnKeyReleased(e-> {
-				switch (e.getCode()) {
-				case LEFT:
-					lutin.setDeplacementGauche(false);
-					break;
-				case RIGHT:
-					lutin.setDeplacementDroite(false);
-					break;
+			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				@Override
+				public void handle(KeyEvent keyEvent) {
+					if(keyEvent.getCode() == KeyCode.ESCAPE) {
+						keyEvent.consume();
+					}
+					switch (keyEvent.getCode()) {
+					case LEFT:
+						lutin.setDeplacementGauche(false);
+						break;
+					case RIGHT:
+						lutin.setDeplacementDroite(false);
+						break;
+					}
 				}
 			});
 			

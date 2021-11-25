@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 
 public class Menu {
 
@@ -12,10 +13,10 @@ public class Menu {
 
 	public Menu(Group root) {
 		root.getChildren().clear();
-		StackPane sp = new StackPane();
-		root.getChildren().add(sp);
-		sp.getChildren().add(this.backgroundMenu);
-		root.getChildren().addAll(this.orgeSelection);
+		double taille = this.backgroundMenu.getLayoutBounds().getMaxX();
+		double marge = (Screen.getPrimary().getBounds().getMaxX()-taille)/2;
+		this.backgroundMenu.setX(marge);
+		root.getChildren().addAll(this.backgroundMenu, this.orgeSelection);
 	}
 
 	public ImageView getBackground() {

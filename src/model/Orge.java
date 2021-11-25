@@ -1,6 +1,7 @@
 package model;
 
 import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
 
 public class Orge {
 
@@ -28,17 +29,17 @@ public class Orge {
 		case 0:
 			//Le sucre d'orge pointe sur "jouer"
 			this.orge.setY(295);
-			this.orge.setX(495);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-150);
 			break;
-		case 1:
+		case 1: 
 			//Le sucre d'orge pointe sur "customisation"
 			this.orge.setY(370);
-			this.orge.setX(410);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-230);
 			break;
 		case 2:
 			//Le sucre d'orge pointe sur "paramètres"
 			this.orge.setY(450);
-			this.orge.setX(470);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-180);
 			break;
 		}
 	}

@@ -3,9 +3,11 @@ package view;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import application.Main;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import model.Block;
 import model.SolidBlock;
 import model.TransparentBlock;
@@ -20,16 +22,16 @@ public class Niveau1 {
 	private int generationTab[][] = 
 		{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0},
+			{0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0},
-			{0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
-			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+			{1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0},
+			{2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0}};
 
 	private ImageView lutin = new ImageView(new Image("lutin4.png"));
 	private Group root;
@@ -39,6 +41,7 @@ public class Niveau1 {
 	private double coordY;
 
 	public Niveau1(Group root) {
+		Main.scene.setFill(Color.web("3fa9f5"));
 		this.colisionBlocks = new ArrayList<Block>();
 		this.generatedMap = new ArrayList<Block>();
 		this.root = root;
@@ -84,9 +87,13 @@ public class Niveau1 {
 		case 0:
 			return new TransparentBlock("ciel.png");
 		case 1:
-			return new SolidBlock("sol.png");
+			return new SolidBlock("bloc1.png");
 		case 2:
-			return new TransparentBlock("ciel.png");
+			return new SolidBlock("bloc2.png");
+		case 3:
+			return new TransparentBlock("cielNuage1png.png");
+		case 4:
+			return new TransparentBlock("cielNuage2.png");
 		default:
 			return new TransparentBlock("ciel.png");
 		}

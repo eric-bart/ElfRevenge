@@ -2,6 +2,7 @@ package application;
 
 import controller.MenuController;
 import controller.NiveauController;
+import controller.PauseController;
 import controller.SelectionNiveauController;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -60,8 +61,7 @@ public class Main extends Application {
 			break;
 		case PAUSE:
 			//Lancement de la pause
-			System.out.println("Lancement de la pause");
-			System.out.println(etat);
+			PauseController pause = new PauseController(root, scene);
 			break;
 		case PARAMETRES:
 			//Lancement des paramètres

@@ -217,6 +217,7 @@ public class Lutin {
 				&& image.isHardBlock();
 	}
 	
+	
 	public boolean isColisionDroite(Block image) {
 		return this.lutin.getLayoutBounds().getMaxX()>=image.getBlock().getLayoutBounds().getMinX() 
 				&& this.lutin.getLayoutBounds().getMaxX() <= image.getBlock().getLayoutBounds().getMaxX()
@@ -225,6 +226,7 @@ public class Lutin {
 				&& image.isHardBlock();
 	}
 	
+	
 	public boolean isColisionDessus(Block image) {
 		return this.lutin.getLayoutBounds().getMinX()>=image.getBlock().getLayoutBounds().getMinX() 
 				&& this.lutin.getLayoutBounds().getMinX()<=image.getBlock().getLayoutBounds().getMaxX()
@@ -232,6 +234,8 @@ public class Lutin {
 				&& this.lutin.getLayoutBounds().getMaxX()<=image.getBlock().getLayoutBounds().getMaxX()
 				&& image.isHardBlock();
 	}
+	
+	
 	
 	public void tombe(Niveau1 niveau) {
 		this.lutin.setY(this.lutin.getY() + this.vitesseY);
@@ -319,9 +323,6 @@ public class Lutin {
 			return null;
 		}
 	}
-	
-	
-	
 	
 	/**
 	 * Retourne la ligne de blocs sur lequel le lutin se trouve
