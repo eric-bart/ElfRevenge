@@ -17,9 +17,11 @@ import application.Main;
 
 public class NiveauController {
 
+	public static AnimationTimer boucle;
 	private Group root;
-	private Scene scene;
+	private static Scene scene;
 	private GameState etat;
+	private static Lutin lutin;
 
 	public NiveauController(Group root, Scene scene, GameState etat) {
 		this.root = root;
@@ -36,6 +38,7 @@ public class NiveauController {
 		case NIVEAU1:
 			Niveau1 niveau1 = new Niveau1(this.root);
 			deplacement(niveau1);
+			setListeners();
 			break;
 		}
 	}
@@ -47,9 +50,9 @@ public class NiveauController {
 	 * @param niveau
 	 */
 	public void deplacement(Niveau1 niveau) {
-		Lutin lutin = new Lutin(niveau.getLutin(), 0, 400);
+		this.lutin = new Lutin(niveau.getLutin(), 0, 400);
 		try {
-			AnimationTimer boucle = new AnimationTimer() {
+			this.boucle = new AnimationTimer() {
 				@Override
 				public void handle(long arg0) {
 					if(lutin.blocDessousLutin(niveau)!=null) {
@@ -68,7 +71,7 @@ public class NiveauController {
 					} else {
 						lutin.tombe(niveau);
 					}
-					
+
 					if(lutin.blocGaucheLutin(niveau)!=null) {
 						if(!lutin.isColisionGauche(lutin.blocGaucheLutin(niveau))) {
 							if (lutin.isDeplacementGauche()) {
@@ -78,60 +81,62 @@ public class NiveauController {
 					} else {
 						lutin.tombe(niveau);
 					}
-					if (lutin.isSaut()) {
+					
+					if(lutin.isSaut()) {
 						lutin.sauter(niveau);
 					}
 				}
-				
 			};
-			
-			scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent keyEvent) {
-					if(keyEvent.getCode() == KeyCode.ESCAPE) {
-						keyEvent.consume();
-					}
-					switch (keyEvent.getCode()) {
-					case LEFT:
-						lutin.setDeplacementGauche(true);
-						break;
-					case RIGHT:
-						lutin.setDeplacementDroite(true);
-						break;
-					case SPACE:
-						lutin.setSaut(true);
-						break;
-					case ESCAPE:
-						boucle.stop();
-						Main.setGameState(GameState.PAUSE);
-						break;
-					}
-				}
-			});
-			
-			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent keyEvent) {
-					if(keyEvent.getCode() == KeyCode.ESCAPE) {
-						keyEvent.consume();
-					}
-					switch (keyEvent.getCode()) {
-					case LEFT:
-						lutin.setDeplacementGauche(false);
-						break;
-					case RIGHT:
-						lutin.setDeplacementDroite(false);
-						break;
-					case SPACE:
-						lutin.setSaut(false);
-						break;
-					}
-				}
-			});
-			
 			boucle.start();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	public static void setListeners() {
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent keyEvent) {
+				if(keyEvent.getCode() == KeyCode.ESCAPE) {
+					keyEvent.consume();
+				}
+				switch (keyEvent.getCode()) {
+				case LEFT:
+					lutin.setDeplacementGauche(true);
+					break;
+				case RIGHT:
+					lutin.setDeplacementDroite(true);
+					break;
+				case ESCAPE:
+					boucle.stop();
+					Main.setGameState(GameState.PAUSE);
+					break;
+				case SPACE:
+					lutin.setSaut(true);
+					break;
+				}
+			}
+		});
+
+		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent keyEvent) {
+				if(keyEvent.getCode() == KeyCode.ESCAPE) {
+					keyEvent.consume();
+				}
+				switch (keyEvent.getCode()) {
+				case LEFT:
+					lutin.setDeplacementGauche(false);
+					break;
+				case RIGHT:
+					lutin.setDeplacementDroite(false);
+					break;
+				case SPACE:
+					lutin.setSaut(false);
+					break;
+				}
+			}
+		});
+	}
+
 }

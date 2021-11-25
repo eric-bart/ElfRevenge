@@ -62,6 +62,7 @@ public class Main extends Application {
 		case PAUSE:
 			//Lancement de la pause
 			PauseController pause = new PauseController(root, scene);
+			pause.pause();
 			break;
 		case PARAMETRES:
 			//Lancement des paramètres
