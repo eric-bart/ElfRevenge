@@ -188,13 +188,13 @@ public class Lutin {
 		}
 		//Si le personnage se déplace à gauche alors on recupère la position maximum de la map à gauche et on regarde s'il peut avancer.
 		if(this.deplacementGauche) {
-			if(this.lutin.getX()+VITESSE_DEPLACEMENT<=niveau.getGeneration().get(0).getBlock().getLayoutBounds().getMinX()) {
+			if(this.lutin.getX()-VITESSE_DEPLACEMENT<=niveau.getGeneration().get(0).getBlock().getLayoutBounds().getMinX()) {
 				this.lutin.setX(niveau.getGeneration().get(0).getBlock().getLayoutBounds().getMinX());
 			} else if(this.getCoordMapMaxX()>0+(Screen.getPrimary().getBounds().getMaxX()/2)) {
 				niveau.getGeneration().forEach(e -> {
 					e.getBlock().setX(e.getBlock().getX()+VITESSE_DEPLACEMENT);
 				});
-				this.lutin.setX((Screen.getPrimary().getBounds().getMaxX()/2) - VITESSE_DEPLACEMENT);
+				this.lutin.setX((Screen.getPrimary().getBounds().getMaxX()/2));
 				this.setCoordMapMinX(this.getCoordMapMinX() - VITESSE_DEPLACEMENT);
 				this.setCoordMapMaxX(this.getCoordMapMaxX() - VITESSE_DEPLACEMENT);
 				this.setCoordMapCentreX(this.getCoordMapCentreX() - VITESSE_DEPLACEMENT);
