@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
 import view.Niveau1;
 
 public class Lutin {
@@ -18,6 +19,12 @@ public class Lutin {
 	private double vitesseY = 0;
 	private static double G = 0.02d;
 	private ImageView lutin;
+	private double coordMapMaxX;
+	private double coordMapCentreX;
+	private double coordMapMinX;
+	private double coordMapCentreY;
+	private double coordMapMaxY;
+	private double coordMapMinY;
 
 	/**
 	 * Construit un lutin détenant une certaine coordonnée et un ImageView qui correspond à sa représentation sur la vue.
@@ -25,10 +32,16 @@ public class Lutin {
 	 * @param coordX
 	 * @param coordY
 	 */
-	public Lutin(ImageView lutin, double coordX, double coordY) {
+	public Lutin(ImageView lutin, double coordScreenX, double coordScreenY) {
 		this.lutin = lutin;
-		lutin.setX(coordX);
-		lutin.setY(coordY);
+		lutin.setX(coordScreenX);
+		lutin.setY(coordScreenY);
+		this.coordMapMaxX = coordScreenX+this.lutin.getLayoutBounds().getMaxX();
+		this.coordMapMinX = coordScreenX;
+		this.coordMapCentreX = coordScreenX+(this.lutin.getLayoutBounds().getMaxX()/2);
+		this.coordMapMaxY = coordScreenY+this.lutin.getLayoutBounds().getMinY();
+		this.coordMapMinY = coordScreenY;
+		this.coordMapCentreY = coordMapMaxY+(this.lutin.getLayoutBounds().getMaxY()/2);
 		this.deplacementDroite=false;
 		this.deplacementGauche=false;
 		this.colisionDroite=false;
@@ -44,6 +57,52 @@ public class Lutin {
 		return VITESSESAUT;
 	}
 	
+	
+	public double getCoordMapCentreX() {
+		return this.coordMapCentreX;
+	}
+	
+	public double getCoordMapMaxX() {
+		return this.coordMapMaxX;
+	}
+	
+	public double getCoordMapMinX() {
+		return this.coordMapMinX;
+	}
+	
+	public double getCoordMapCentreY() {
+		return this.coordMapCentreY;
+	}
+	public double getCoordMapMaxY() {
+		return this.coordMapMaxY;
+	}
+	public double getCoordMapMinY() {
+		return this.coordMapMinY;
+	}
+	
+	public void setCoordMapMinX(double coordMapX) {
+		this.coordMapMinX = coordMapX;
+	}
+	
+	public void setCoordMapCentreX(double coordMapX) {
+		this.coordMapCentreX = coordMapX;
+	}
+	
+	public void setCoordMapMaxX(double coordMapX) {
+		this.coordMapMaxX = coordMapX;
+	}
+	
+	public void setCoordMapMinY(double coordMapY) {
+		this.coordMapMinY = coordMapY;
+	}
+	
+	public void setCoordMapCentreY(double coordMapY) {
+		this.coordMapCentreY = coordMapY;
+	}
+	
+	public void setCoordMapMaxY(double coordMapY) {
+		this.coordMapMaxY = coordMapY;
+	}
 	
 	/**
 	 * Retourne la valeur du timer qui permet de gérer le saut du lutin
@@ -111,19 +170,44 @@ public class Lutin {
 		if(this.deplacementDroite) {
 			if(this.lutin.getX()+VITESSE_DEPLACEMENT>=niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMaxX()) {
 				this.lutin.setX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMinX());
-			} else {
+			} else if(lutin.getX()<(Screen.getPrimary().getBounds().getMaxX()/2)){
 				this.lutin.setX(this.lutin.getX() + VITESSE_DEPLACEMENT);
+				this.setCoordMapMinX(this.getCoordMapMinX() + VITESSE_DEPLACEMENT);
+				this.setCoordMapMaxX(this.getCoordMapMaxX() + VITESSE_DEPLACEMENT);
+				this.setCoordMapCentreX(this.getCoordMapCentreX() + VITESSE_DEPLACEMENT);
+			} else {
+				niveau.getGeneration().forEach(e -> {
+					e.getBlock().setX(e.getBlock().getX()-VITESSE_DEPLACEMENT);
+				});
+				this.lutin.setX((Screen.getPrimary().getBounds().getMaxX()/2) + VITESSE_DEPLACEMENT);
+				this.setCoordMapMinX(this.getCoordMapMinX() + VITESSE_DEPLACEMENT);
+				this.setCoordMapMaxX(this.getCoordMapMaxX() + VITESSE_DEPLACEMENT);
+				this.setCoordMapCentreX(this.getCoordMapCentreX() + VITESSE_DEPLACEMENT);
 			}
+			System.out.println("Le lutin est en " + this.getCoordMapMinX() +";"+this.getCoordMapMaxX());
 		}
 		//Si le personnage se déplace à gauche alors on recupère la position maximum de la map à gauche et on regarde s'il peut avancer.
 		if(this.deplacementGauche) {
 			if(this.lutin.getX()+VITESSE_DEPLACEMENT<=niveau.getGeneration().get(0).getBlock().getLayoutBounds().getMinX()) {
 				this.lutin.setX(niveau.getGeneration().get(0).getBlock().getLayoutBounds().getMinX());
+			} else if(this.getCoordMapMaxX()>0+(Screen.getPrimary().getBounds().getMaxX()/2)) {
+				niveau.getGeneration().forEach(e -> {
+					e.getBlock().setX(e.getBlock().getX()+VITESSE_DEPLACEMENT);
+				});
+				this.lutin.setX((Screen.getPrimary().getBounds().getMaxX()/2) - VITESSE_DEPLACEMENT);
+				this.setCoordMapMinX(this.getCoordMapMinX() - VITESSE_DEPLACEMENT);
+				this.setCoordMapMaxX(this.getCoordMapMaxX() - VITESSE_DEPLACEMENT);
+				this.setCoordMapCentreX(this.getCoordMapCentreX() - VITESSE_DEPLACEMENT);
 			} else {
 				this.lutin.setX(this.lutin.getX() - VITESSE_DEPLACEMENT);
+				this.setCoordMapMinX(this.getCoordMapMinX() - VITESSE_DEPLACEMENT);
+				this.setCoordMapMaxX(this.getCoordMapMaxX() - VITESSE_DEPLACEMENT);
+				this.setCoordMapCentreX(this.getCoordMapCentreX() - VITESSE_DEPLACEMENT);
 			}
+			System.out.println("Le lutin est en " + this.getCoordMapMinX() +";"+this.getCoordMapMaxX());
 		}
 	}
+	
 	
 	public boolean isColisionGauche(Block image) {
 		return this.lutin.getLayoutBounds().getMinX()>=image.getBlock().getLayoutBounds().getMinX() 
@@ -149,23 +233,23 @@ public class Lutin {
 				&& image.isHardBlock();
 	}
 	
+	public void tombe(Niveau1 niveau) {
+		this.lutin.setY(this.lutin.getY() + this.vitesseY);
+		this.setCoordMapMinY(this.getCoordMapMinY() + this.vitesseY);
+		this.setCoordMapMaxY(this.getCoordMapMaxY() + this.vitesseY);
+		this.setCoordMapCentreY(this.getCoordMapCentreY() + this.vitesseY);
+		this.vitesseY=this.vitesseY + G;
+	}
+	
 	/**
 	 * Vérifie si le personnage est dans le vide ou pas.
 	 * Vide = Ne pas être sur un block
 	 * @param block Le block sur lequel le lutin se trouve en X
 	 * @return boolean true=Le lutin est dans le vide ; false=Le lutin n'est pas dans le vide
 	 */
-	public boolean isDansLeCiel(Block block) {
-		
-		//Si le lutin a les pieds dans le vide
-		//ou si le lutin a les pieds dans 
-		/**return this.lutin.getLayoutBounds().getMaxY()<block.getLayoutBounds().getMinY() 
-				||  this.lutin.getLayoutBounds().getMaxY()>block.getLayoutBounds().getMaxY()
-				&& (!(this.lutin.getLayoutBounds().getMinY()>block.getLayoutBounds().getMaxY())
-				|| this.lutin.getLayoutBounds().getMinY()<block.getLayoutBounds().getMinX());**/
-		return this.lutin.getLayoutBounds().getMaxY()<block.getBlock().getLayoutBounds().getMinY()
-				|| this.lutin.getLayoutBounds().getMinY()<block.getBlock().getLayoutBounds().getMaxY() 
-				&& this.lutin.getLayoutBounds().getMaxY()<block.getBlock().getLayoutBounds().getMinY();
+	public boolean isDansLeCiel(Niveau1 niveau) {
+		return !this.blocDessousLutin(niveau).isHardBlock() 
+				|| this.lutin.getLayoutBounds().getMaxY()<=this.blocDessousLutin(niveau).getBlock().getLayoutBounds().getMinY();
 	}
 	
 	/**
@@ -174,10 +258,10 @@ public class Lutin {
 	 * @return ImageView le bloc sur lequel se trouve le lutin
 	 */
 	public Block blocActuelLutin(Niveau1 niveau) {
-		if(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize
+		if(((int) this.getCoordMapCentreX()/Block.blockXSize
 				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			return niveau.getGeneration().get(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize
+			return niveau.getGeneration().get(((int) this.getCoordMapCentreX()/Block.blockXSize
 				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length));
 		} else {
@@ -191,10 +275,10 @@ public class Lutin {
 	 * @return ImageView le bloc situé en dessous du lutin
 	 */
 	public Block blocDessousLutin(Niveau1 niveau) {
-		if(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize 
+		if(((int) this.getCoordMapCentreX()/Block.blockXSize 
 				+ (((int) this.lutin.getLayoutBounds().getCenterY() + Block.blockXSize)/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			return niveau.getGeneration().get(((int) this.lutin.getLayoutBounds().getCenterX()/Block.blockXSize 
+			return niveau.getGeneration().get(((int) this.getCoordMapCentreX()/Block.blockXSize 
 				+ (((int) this.lutin.getLayoutBounds().getCenterY() + Block.blockXSize)/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length));
 		} else {
@@ -208,10 +292,10 @@ public class Lutin {
 	 * @return ImageView le bloc situé à droite du lutin
 	 */
 	public Block blocDroiteLutin(Niveau1 niveau) {
-		if((((int) this.lutin.getLayoutBounds().getCenterX()+Block.blockXSize)/Block.blockXSize 
+		if((((int) this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize 
 				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			return niveau.getGeneration().get((((int) this.lutin.getLayoutBounds().getCenterX()+Block.blockXSize)/Block.blockXSize 
+			return niveau.getGeneration().get((((int) this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize 
 				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length));
 		} else {
@@ -225,10 +309,10 @@ public class Lutin {
 	 * @return ImageView le bloc situé à gauche du lutin
 	 */
 	public Block blocGaucheLutin(Niveau1 niveau) {
-		if((((int) this.lutin.getLayoutBounds().getCenterX()-Block.blockXSize)/Block.blockXSize
+		if((((int) this.getCoordMapCentreX()-Block.blockXSize)/Block.blockXSize
 				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			return niveau.getGeneration().get((((int) this.lutin.getLayoutBounds().getCenterX()-Block.blockXSize)/Block.blockXSize
+			return niveau.getGeneration().get((((int) this.getCoordMapCentreX()-Block.blockXSize)/Block.blockXSize
 				+ (((int) this.lutin.getLayoutBounds().getCenterY())/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length));
 		} else {
