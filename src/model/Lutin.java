@@ -341,7 +341,7 @@ public class Lutin extends Personnage {
 	}
 
 	public void sauter(Niveau1 niveau) {
-		if (!(/*this.isColisionDessus(this.blocDessusLutin(niveau)||*/this.isColisionDroite(this.blocDroiteLutin(niveau))||this.isColisionGauche(this.blocGaucheLutin(niveau))||this.isDansLeCiel(niveau))) {
+		if (!(/*this.isColisionDessus(this.blocDessusLutin(niveau)||*/this.isDansLeCiel(niveau))) {
 			this.lutin.setY(this.lutin.getY()-150d);
 			this.setVitesseY(1.6d);
 		}
