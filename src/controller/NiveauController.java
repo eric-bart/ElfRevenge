@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import model.BonhommeDeNeige;
 import model.GameState;
 import model.Lutin;
 import view.Niveau1;
@@ -21,6 +22,7 @@ public class NiveauController {
 	private Group root;
 	private static Scene scene;
 	private GameState etat;
+	private static BonhommeDeNeige bonhommeNeige;
 	private static Lutin lutin;
 
 	public NiveauController(Group root, Scene scene, GameState etat) {
@@ -50,7 +52,8 @@ public class NiveauController {
 	 * @param niveau
 	 */
 	public void deplacement(Niveau1 niveau) {
-		this.lutin = new Lutin(niveau.getLutin(), 0, 400);
+		lutin = new Lutin(niveau.getLutin(), 0, 400);
+		bonhommeNeige = new BonhommeDeNeige(niveau.getBonhommeNeige(), 0, 400);
 		try {
 			this.boucle = new AnimationTimer() {
 				@Override

@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.GameState;
-import model.Orge;
+import model.OrgeMenu;
 import view.Menu;
 
 public class MenuController {
@@ -26,9 +26,7 @@ public class MenuController {
 	 */
 	public void menu() {
 		Menu menu = new Menu(this.root);
-		Orge orge = new Orge(menu.getOrge());
-		
-		double margeDeCote;
+		OrgeMenu orge = new OrgeMenu(menu.getOrge());
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {

@@ -3,9 +3,9 @@ package model;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
-public class OrgePause {
+public class OrgeMenu {
 
-	private String[] options = {"REPRENDRE", "QUITTER"};
+	private String[] options = {"JOUER", "CUSTOMISER", "OPTIONS"};
 	private ImageView orge;
 	private int selectedOpt;
 
@@ -13,7 +13,7 @@ public class OrgePause {
 	 * Constructeur du sucre d'orge, ce qui correspond au sélecteur sur le menu du jeu
 	 * @param orge
 	 */
-	public OrgePause(ImageView orge) {
+	public OrgeMenu(ImageView orge) {
 		this.orge = orge;
 		this.orgeAnimation();
 		this.selectedOpt = 0;
@@ -28,13 +28,18 @@ public class OrgePause {
 		switch(selectedOpt) {
 		case 0:
 			//Le sucre d'orge pointe sur "jouer"
-			this.orge.setY(270);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-220);
+			this.orge.setY(295);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-150);
 			break;
 		case 1: 
 			//Le sucre d'orge pointe sur "customisation"
-			this.orge.setY(400);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-220);
+			this.orge.setY(370);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-230);
+			break;
+		case 2:
+			//Le sucre d'orge pointe sur "paramètres"
+			this.orge.setY(450);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-180);
 			break;
 		}
 	}
@@ -61,9 +66,5 @@ public class OrgePause {
 	 */
 	public void setSelectedOpt(int opt) {
 		this.selectedOpt=opt;
-	}
-	
-	public ImageView getOrge() {
-		return this.orge;
 	}
 }
