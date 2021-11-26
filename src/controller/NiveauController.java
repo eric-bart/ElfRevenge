@@ -118,6 +118,22 @@ public class NiveauController {
 					boucle.stop();
 					Main.setGameState(GameState.PAUSE);
 					break;
+				/*case SPACE:
+					lutin.setSaut(true);
+					break;*/
+				default:
+					break;
+				}
+			}
+		});
+		
+		scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent keyEvent) {
+				if(keyEvent.getCode() == KeyCode.ESCAPE) {
+					keyEvent.consume();
+				}
+				switch (keyEvent.getCode()) {
 				case SPACE:
 					lutin.setSaut(true);
 					break;

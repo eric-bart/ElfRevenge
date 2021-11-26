@@ -348,7 +348,7 @@ public class Lutin extends Personnage {
 	}
 	
 	public boolean isMort(Niveau1 niveau) {
-		return this.lutin.getY()>=760;
+		return this.lutin.getY()>=application.Main.HAUTEUR+100;
 	}
 	
 }
