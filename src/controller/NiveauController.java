@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import javax.swing.RootPaneContainer;
+
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -53,11 +55,12 @@ public class NiveauController {
 	 */
 	public void deplacement(Niveau1 niveau) {
 		lutin = new Lutin(niveau.getLutin(), 0, 400);
-		bonhommeNeige = new BonhommeDeNeige(niveau.getBonhommeNeige(), 0, 400);
+		bonhommeNeige = new BonhommeDeNeige(niveau.getBonhommeNeige(), 400, 580);
 		try {
 			this.boucle = new AnimationTimer() {
 				@Override
 				public void handle(long arg0) {
+					bonhommeNeige.seDeplace(niveau);
 					if(lutin.blocDessousLutin(niveau)!=null) {
 						if(lutin.isDansLeCiel(niveau)) {
 							lutin.tombe(niveau);

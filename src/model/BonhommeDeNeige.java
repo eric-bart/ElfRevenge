@@ -1,6 +1,9 @@
 package model;
 
+import java.util.Iterator;
+
 import javafx.scene.image.ImageView;
+import view.Niveau1;
 
 public class BonhommeDeNeige extends Personnage {
 
@@ -11,7 +14,7 @@ public class BonhommeDeNeige extends Personnage {
 	private boolean saut;
 	private int timerSaut;
 	private static double VITESSESAUT = 0.01d;
-	private static double VITESSE_DEPLACEMENT = 5;
+	private static double VITESSE_DEPLACEMENT = 3;
 	private double vitesseY = 0;
 	private static double G = 0.02d;
 	private ImageView bonhommeNeige;
@@ -21,6 +24,7 @@ public class BonhommeDeNeige extends Personnage {
 	private double coordMapCentreY;
 	private double coordMapMaxY;
 	private double coordMapMinY;
+	private static double maxDeplacement = 300;
 	
 	
 	public BonhommeDeNeige(ImageView bonhommeNeige, double coordScreenX, double coordScreenY) {
@@ -42,5 +46,14 @@ public class BonhommeDeNeige extends Personnage {
 
 	private ImageView getBonhommeNeige() {
 		return this.bonhommeNeige;
+	}
+	
+	public void seDeplace(Niveau1 niveau){
+		for (double i = 1; i < maxDeplacement; i++) {
+			this.bonhommeNeige.setX(this.bonhommeNeige.getX()+this.VITESSE_DEPLACEMENT);
+		}
+		for (double i = 1; i < maxDeplacement; i++) {
+			this.bonhommeNeige.setX(this.bonhommeNeige.getX()-this.VITESSE_DEPLACEMENT);
+		}
 	}
 }

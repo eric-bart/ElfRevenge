@@ -13,7 +13,7 @@ public class Lutin extends Personnage {
 	private boolean saut;
 	private int timerSaut;
 	private static double VITESSESAUT = 0.01d;
-	private static double VITESSE_DEPLACEMENT = 5;
+	private static double VITESSE_DEPLACEMENT = 6;
 	private double vitesseY = 0;
 	private static double G = 0.1d;
 	private ImageView lutin;
@@ -63,22 +63,6 @@ public class Lutin extends Personnage {
 		this.coordMapMaxX = coordMapX;
 	}
 	
-	/**
-	 * Retourne la valeur du timer qui permet de gérer le saut du lutin
-	 * @return int la valeur du timer qui permet de gérer le saut du lutin
-	 */
-	public int getTimerSaut() {
-		return this.timerSaut;
-	}
-	
-	/**
-	 * Permet de mettre à jour la valeur du timer de saut du lutin
-	 * @param timerSaut
-	 */
-	public void setTimerSaut(int timerSaut) {
-		this.timerSaut = timerSaut;
-	}
-
 	
 	/**
 	 * Permet de mettre à jour si le lutin est entrain de sauter ou non
