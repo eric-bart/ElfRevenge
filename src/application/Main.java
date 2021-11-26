@@ -20,7 +20,6 @@ public class Main extends Application {
 	public static Scene scene;
 	public static GameState etat;
 	public Stage fenetre;
-	public static int HAUTEUR = 720;
 
 
 	/**
@@ -30,7 +29,7 @@ public class Main extends Application {
 		etat=GameState.MENU;
 		root = new Group();
 		//On met en place le fond de la fenètre avec l'image background
-		scene = new Scene(root, Screen.getPrimary().getBounds().getMaxX(), this.HAUTEUR);
+		scene = new Scene(root, Screen.getPrimary().getBounds().getMaxX(), 720);
 	}
 
 	/**

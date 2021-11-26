@@ -85,8 +85,9 @@ public class NiveauController {
 						lutin.tombe(niveau);
 					}
 					
-					if(lutin.isSaut()) {
+					if(lutin.isSaut()&&lutin.getRaterri()) {
 						lutin.sauter(niveau);
+						lutin.setRaterri(false);
 					}
 					if(lutin.isMort(niveau)) {
 						boucle.stop();
@@ -118,22 +119,6 @@ public class NiveauController {
 					boucle.stop();
 					Main.setGameState(GameState.PAUSE);
 					break;
-				/*case SPACE:
-					lutin.setSaut(true);
-					break;*/
-				default:
-					break;
-				}
-			}
-		});
-		
-		scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent keyEvent) {
-				if(keyEvent.getCode() == KeyCode.ESCAPE) {
-					keyEvent.consume();
-				}
-				switch (keyEvent.getCode()) {
 				case SPACE:
 					lutin.setSaut(true);
 					break;
@@ -142,7 +127,7 @@ public class NiveauController {
 				}
 			}
 		});
-
+		
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {
@@ -158,6 +143,7 @@ public class NiveauController {
 					break;
 				case SPACE:
 					lutin.setSaut(false);
+					lutin.setRaterri(true);
 					break;
 				default:
 					break;

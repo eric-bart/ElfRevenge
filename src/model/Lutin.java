@@ -19,6 +19,7 @@ public class Lutin extends Personnage {
 	private ImageView lutin;
 	private double coordMapMaxX;
 	private double coordMapCentreX;
+	private boolean raterri;
 
 	/**
 	 * Construit un lutin détenant une certaine coordonnée et un ImageView qui correspond à sa représentation sur la vue.
@@ -341,14 +342,22 @@ public class Lutin extends Personnage {
 	}
 
 	public void sauter(Niveau1 niveau) {
-		if (!(/*this.isColisionDessus(this.blocDessusLutin(niveau)||*/this.isDansLeCiel(niveau))) {
+		if (!this.isDansLeCiel(niveau)) {
 			this.lutin.setY(this.lutin.getY()-150d);
 			this.setVitesseY(1.6d);
 		}
 	}
 	
 	public boolean isMort(Niveau1 niveau) {
-		return this.lutin.getY()>=application.Main.HAUTEUR+100;
+		return this.lutin.getY()>=760;
+	}
+
+	public void setRaterri(boolean b) {
+		this.raterri=b;
+		
+	}
+	public boolean getRaterri() {
+		return this.raterri;
 	}
 	
 }
