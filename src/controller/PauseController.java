@@ -6,8 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import model.GameState;
-import model.Orge;
 import model.OrgePause;
 import view.Menu;
 import view.Pause;
@@ -43,6 +43,7 @@ public class PauseController {
 						root.getChildren().removeAll(pause.getPauseBackground(), orge.getOrge());
 						break;
 					case "QUITTER":
+						scene.setFill(Color.web("9bbeff"));
 						application.Main.setGameState(GameState.MENU);
 						break;
 					}
