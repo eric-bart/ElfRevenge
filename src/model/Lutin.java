@@ -17,7 +17,7 @@ public class Lutin {
 	private static double VITESSESAUT = 0.01d;
 	private static double VITESSE_DEPLACEMENT = 5;
 	private double vitesseY = 0;
-	private static double G = 0.02d;
+	private static double G = 0.1d;
 	private ImageView lutin;
 	private double coordMapMaxX;
 	private double coordMapCentreX;
@@ -397,4 +397,9 @@ public class Lutin {
 			this.setVitesseY(1.6d);
 		}
 	}
+	
+	public boolean isMort(Niveau1 niveau) {
+		return this.lutin.getY()>=760;
+	}
+	
 }

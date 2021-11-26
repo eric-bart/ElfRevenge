@@ -85,6 +85,10 @@ public class NiveauController {
 					if(lutin.isSaut()) {
 						lutin.sauter(niveau);
 					}
+					if(lutin.isMort(niveau)) {
+						boucle.stop();
+						Main.setGameState(GameState.MENU);
+					}
 				}
 			};
 			boucle.start();
@@ -114,6 +118,8 @@ public class NiveauController {
 				case SPACE:
 					lutin.setSaut(true);
 					break;
+				default:
+					break;
 				}
 			}
 		});
@@ -133,6 +139,8 @@ public class NiveauController {
 					break;
 				case SPACE:
 					lutin.setSaut(false);
+					break;
+				default:
 					break;
 				}
 			}
