@@ -10,7 +10,7 @@ public class OrgeMenu {
 	private int selectedOpt;
 
 	/**
-	 * Constructeur du sucre d'orge, ce qui correspond au sélecteur sur le menu du jeu
+	 * Constructeur du sucre d'orge, ce qui correspond au sÃ©lecteur sur le menu du jeu
 	 * @param orge
 	 */
 	public OrgeMenu(ImageView orge) {
@@ -20,32 +20,37 @@ public class OrgeMenu {
 	}
 
 	/**
-	 * Cette fonction permet de déplacer l'orge en fonction
-	 * de l'option du menu qui est en cours de sélection
+	 * Cette fonction permet de dÃ©placer l'orge en fonction
+	 * de l'option du menu qui est en cours de sÃ©lection
 	 */
 	public void orgeAnimation() {
 		int selectedOpt = this.selectedOpt;
 		switch(selectedOpt) {
 		case 0:
 			//Le sucre d'orge pointe sur "jouer"
-			this.orge.setY(295);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-150);
+			this.orge.setY(285);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-260);
 			break;
 		case 1: 
 			//Le sucre d'orge pointe sur "customisation"
-			this.orge.setY(370);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-230);
+			this.orge.setY(360);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-325);
 			break;
 		case 2:
-			//Le sucre d'orge pointe sur "paramètres"
-			this.orge.setY(450);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-180);
+			//Le sucre d'orge pointe sur "paramï¿½tres"
+			this.orge.setY(440);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-310);
+			break;
+		default :
+			//Le sucre d'orge pointe sur "jouer"
+			this.orge.setY(285);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-260);
 			break;
 		}
 	}
 
 	/**
-	 * Retourne le tableau contenant les différentes options disponibles sur le menu
+	 * Retourne le tableau contenant les diffÃ©rentes options disponibles sur le menu
 	 * @return options, le tableau d'options
 	 */
 	public String[] getOptions() {
@@ -53,16 +58,16 @@ public class OrgeMenu {
 	}
 
 	/**
-	 * Retourne l'itération du tableau options
-	 * @return l'itération (0 = JOUER, 1 = CUSTOMISATION, 2 = OPTIONS)
+	 * Retourne l'itÃ©ration du tableau options
+	 * @return l'itÃ©ration (0 = JOUER, 1 = CUSTOMISATION, 2 = OPTIONS)
 	 */
 	public int getSelectedOpt() {
 		return this.selectedOpt;
 	}
 
 	/**
-	 * Permet de mettre à jour l'itération du tableau "options" sur laquelle l'utilisateur pointe
-	 * @param opt l'itération (0 = JOUER, 1 = CUSTOMISATION, 2 = OPTIONS)
+	 * Permet de mettre Ã  jour l'itÃ©ration du tableau "options" sur laquelle l'utilisateur pointe
+	 * @param opt l'itÃ©ration (0 = JOUER, 1 = CUSTOMISATION, 2 = OPTIONS)
 	 */
 	public void setSelectedOpt(int opt) {
 		this.selectedOpt=opt;

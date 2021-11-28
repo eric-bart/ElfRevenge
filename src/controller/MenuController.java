@@ -22,13 +22,11 @@ public class MenuController {
 	}
 
 	/**
-	 * Mï¿½thode qui met sous ï¿½coute les touches du claviers et change l'ï¿½tat du jeu en fonction de l'option du menu qui est sï¿½lectionnï¿½e
+	 * Méthode qui met sous écoute les touches du claviers et change l'état du jeu en fonction de l'option du menu qui est sélectionnée
 	 */
 	public void menu() {
 		Menu menu = new Menu(this.root);
-		Orge orge = new Orge(menu.getOrge());
-		orge.selectNiveau = false;
-
+		OrgeMenu orge = new OrgeMenu(menu.getOrge());
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {

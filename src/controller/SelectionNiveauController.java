@@ -6,9 +6,11 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.GameState;
-import model.Orge;
+import model.OrgeMenu;
+import model.OrgeSelectNiveau;
 import view.Menu;
 import view.SelectNiveau;
+
 
 public class SelectionNiveauController {
 	
@@ -23,9 +25,9 @@ public class SelectionNiveauController {
     }
 
 	public void selectionNiveau() {
+		//Sélection du niveau pas encore faite -> Je redirige vers le niveau1
 		SelectNiveau select = new SelectNiveau(this.root);
-		Orge orge = new Orge(select.getOrge());
-		orge.selectNiveau = true;
+		OrgeSelectNiveau orge = new OrgeSelectNiveau(select.getOrge());
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {

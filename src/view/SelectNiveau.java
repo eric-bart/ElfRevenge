@@ -12,8 +12,6 @@ public class SelectNiveau {
 	public SelectNiveau(Group root) {
 		root.getChildren().clear();
 		double taille = this.background.getLayoutBounds().getMaxX();
-		/*double marge = (Screen.getPrimary().getBounds().getMaxX()-taille)/2;
-		this.backgroundMenu.setX(marge);*/
 		root.getChildren().addAll(this.background, this.orgeSelection);
 	}
 
