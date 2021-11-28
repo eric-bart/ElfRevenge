@@ -6,25 +6,20 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import view.Niveau1;
 
-public class Lutin {
+public class Lutin extends Personnage {
 
 	private boolean deplacementGauche;
 	private boolean deplacementDroite;
-	private boolean colisionDroite;
-	private boolean colisionGauche;
 	private boolean saut;
 	private int timerSaut;
 	private static double VITESSESAUT = 0.01d;
-	private static double VITESSE_DEPLACEMENT = 5;
+	private static double VITESSE_DEPLACEMENT = 6;
 	private double vitesseY = 0;
-	private static double G = 0.02d;
+	private static double G = 0.1d;
 	private ImageView lutin;
 	private double coordMapMaxX;
 	private double coordMapCentreX;
-	private double coordMapMinX;
-	private double coordMapCentreY;
-	private double coordMapMaxY;
-	private double coordMapMinY;
+	private boolean raterri;
 
 	/**
 	 * Construit un lutin détenant une certaine coordonnée et un ImageView qui correspond à sa représentation sur la vue.
@@ -37,15 +32,9 @@ public class Lutin {
 		lutin.setX(coordScreenX);
 		lutin.setY(coordScreenY);
 		this.coordMapMaxX = coordScreenX+this.lutin.getLayoutBounds().getMaxX();
-		this.coordMapMinX = coordScreenX;
 		this.coordMapCentreX = coordScreenX+(this.lutin.getLayoutBounds().getMaxX()/2);
-		this.coordMapMaxY = coordScreenY+this.lutin.getLayoutBounds().getMinY();
-		this.coordMapMinY = coordScreenY;
-		this.coordMapCentreY = coordMapMaxY+(this.lutin.getLayoutBounds().getMaxY()/2);
 		this.deplacementDroite=false;
 		this.deplacementGauche=false;
-		this.colisionDroite=false;
-		this.colisionGauche=false;
 		this.saut=false;
 	}
 
@@ -66,24 +55,6 @@ public class Lutin {
 		return this.coordMapMaxX;
 	}
 	
-	public double getCoordMapMinX() {
-		return this.coordMapMinX;
-	}
-	
-	public double getCoordMapCentreY() {
-		return this.coordMapCentreY;
-	}
-	public double getCoordMapMaxY() {
-		return this.coordMapMaxY;
-	}
-	public double getCoordMapMinY() {
-		return this.coordMapMinY;
-	}
-	
-	public void setCoordMapMinX(double coordMapX) {
-		this.coordMapMinX = coordMapX;
-	}
-	
 	public void setCoordMapCentreX(double coordMapX) {
 		this.coordMapCentreX = coordMapX;
 	}
@@ -92,34 +63,6 @@ public class Lutin {
 		this.coordMapMaxX = coordMapX;
 	}
 	
-	public void setCoordMapMinY(double coordMapY) {
-		this.coordMapMinY = coordMapY;
-	}
-	
-	public void setCoordMapCentreY(double coordMapY) {
-		this.coordMapCentreY = coordMapY;
-	}
-	
-	public void setCoordMapMaxY(double coordMapY) {
-		this.coordMapMaxY = coordMapY;
-	}
-	
-	/**
-	 * Retourne la valeur du timer qui permet de gérer le saut du lutin
-	 * @return int la valeur du timer qui permet de gérer le saut du lutin
-	 */
-	public int getTimerSaut() {
-		return this.timerSaut;
-	}
-	
-	/**
-	 * Permet de mettre à jour la valeur du timer de saut du lutin
-	 * @param timerSaut
-	 */
-	public void setTimerSaut(int timerSaut) {
-		this.timerSaut = timerSaut;
-	}
-
 	
 	/**
 	 * Permet de mettre à jour si le lutin est entrain de sauter ou non
@@ -172,7 +115,6 @@ public class Lutin {
 				this.lutin.setX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMinX());
 			} else if(lutin.getX()<(Screen.getPrimary().getBounds().getMaxX()/2)){
 				this.lutin.setX(this.lutin.getX() + VITESSE_DEPLACEMENT);
-				this.setCoordMapMinX(this.getCoordMapMinX() + VITESSE_DEPLACEMENT);
 				this.setCoordMapMaxX(this.getCoordMapMaxX() + VITESSE_DEPLACEMENT);
 				this.setCoordMapCentreX(this.getCoordMapCentreX() + VITESSE_DEPLACEMENT);
 			} else {
@@ -180,11 +122,9 @@ public class Lutin {
 					e.getBlock().setX(e.getBlock().getX()-VITESSE_DEPLACEMENT);
 				});
 				this.lutin.setX((Screen.getPrimary().getBounds().getMaxX()/2) + VITESSE_DEPLACEMENT);
-				this.setCoordMapMinX(this.getCoordMapMinX() + VITESSE_DEPLACEMENT);
 				this.setCoordMapMaxX(this.getCoordMapMaxX() + VITESSE_DEPLACEMENT);
 				this.setCoordMapCentreX(this.getCoordMapCentreX() + VITESSE_DEPLACEMENT);
 			}
-			System.out.println("Le lutin est en " + this.getCoordMapMinX() +";"+this.getCoordMapMaxX());
 		}
 		//Si le personnage se déplace à gauche alors on recupère la position maximum de la map à gauche et on regarde s'il peut avancer.
 		if(this.deplacementGauche) {
@@ -195,16 +135,13 @@ public class Lutin {
 					e.getBlock().setX(e.getBlock().getX()+VITESSE_DEPLACEMENT);
 				});
 				this.lutin.setX((Screen.getPrimary().getBounds().getMaxX()/2));
-				this.setCoordMapMinX(this.getCoordMapMinX() - VITESSE_DEPLACEMENT);
 				this.setCoordMapMaxX(this.getCoordMapMaxX() - VITESSE_DEPLACEMENT);
 				this.setCoordMapCentreX(this.getCoordMapCentreX() - VITESSE_DEPLACEMENT);
 			} else {
 				this.lutin.setX(this.lutin.getX() - VITESSE_DEPLACEMENT);
-				this.setCoordMapMinX(this.getCoordMapMinX() - VITESSE_DEPLACEMENT);
 				this.setCoordMapMaxX(this.getCoordMapMaxX() - VITESSE_DEPLACEMENT);
 				this.setCoordMapCentreX(this.getCoordMapCentreX() - VITESSE_DEPLACEMENT);
 			}
-			System.out.println("Le lutin est en " + this.getCoordMapMinX() +";"+this.getCoordMapMaxX());
 		}
 	}
 	
@@ -239,9 +176,6 @@ public class Lutin {
 	
 	public void tombe(Niveau1 niveau) {
 		this.lutin.setY(this.lutin.getY() + this.vitesseY);
-		this.setCoordMapMinY(this.getCoordMapMinY() + this.vitesseY);
-		this.setCoordMapMaxY(this.getCoordMapMaxY() + this.vitesseY);
-		this.setCoordMapCentreY(this.getCoordMapCentreY() + this.vitesseY);
 		this.vitesseY=this.vitesseY + G;
 	}
 	
@@ -392,9 +326,22 @@ public class Lutin {
 	}
 
 	public void sauter(Niveau1 niveau) {
-		if (!(/*this.isColisionDessus(this.blocDessusLutin(niveau)||*/this.isColisionDroite(this.blocDroiteLutin(niveau))||this.isColisionGauche(this.blocGaucheLutin(niveau))||this.isDansLeCiel(niveau))) {
+		if (!this.isDansLeCiel(niveau)) {
 			this.lutin.setY(this.lutin.getY()-150d);
 			this.setVitesseY(1.6d);
 		}
 	}
+	
+	public boolean isMort(Niveau1 niveau) {
+		return this.lutin.getY()>=760;
+	}
+
+	public void setRaterri(boolean b) {
+		this.raterri=b;
+		
+	}
+	public boolean getRaterri() {
+		return this.raterri;
+	}
+	
 }

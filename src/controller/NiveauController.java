@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import javax.swing.RootPaneContainer;
+
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -10,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import model.BonhommeDeNeige;
 import model.GameState;
 import model.Lutin;
 import view.Niveau1;
@@ -21,6 +24,7 @@ public class NiveauController {
 	private Group root;
 	private static Scene scene;
 	private GameState etat;
+	private static BonhommeDeNeige bonhommeNeige;
 	private static Lutin lutin;
 
 	public NiveauController(Group root, Scene scene, GameState etat) {
@@ -50,11 +54,13 @@ public class NiveauController {
 	 * @param niveau
 	 */
 	public void deplacement(Niveau1 niveau) {
-		this.lutin = new Lutin(niveau.getLutin(), 0, 400);
+		lutin = new Lutin(niveau.getLutin(), 0, 400);
+		bonhommeNeige = new BonhommeDeNeige(niveau.getBonhommeNeige(), 400, 580);
 		try {
 			this.boucle = new AnimationTimer() {
 				@Override
 				public void handle(long arg0) {
+					bonhommeNeige.seDeplace(niveau);
 					if(lutin.blocDessousLutin(niveau)!=null) {
 						if(lutin.isDansLeCiel(niveau)) {
 							lutin.tombe(niveau);
@@ -82,8 +88,13 @@ public class NiveauController {
 						lutin.tombe(niveau);
 					}
 					
-					if(lutin.isSaut()) {
+					if(lutin.isSaut()&&lutin.getRaterri()) {
 						lutin.sauter(niveau);
+						lutin.setRaterri(false);
+					}
+					if(lutin.isMort(niveau)) {
+						boucle.stop();
+						Main.setGameState(GameState.MENU);
 					}
 				}
 			};
@@ -114,10 +125,12 @@ public class NiveauController {
 				case SPACE:
 					lutin.setSaut(true);
 					break;
+				default:
+					break;
 				}
 			}
 		});
-
+		
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {
@@ -133,6 +146,9 @@ public class NiveauController {
 					break;
 				case SPACE:
 					lutin.setSaut(false);
+					lutin.setRaterri(true);
+					break;
+				default:
 					break;
 				}
 			}

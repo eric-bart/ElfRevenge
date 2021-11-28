@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.GameState;
-import model.Orge;
+import model.OrgeMenu;
 import view.Menu;
 
 public class MenuController {
@@ -22,14 +22,13 @@ public class MenuController {
 	}
 
 	/**
-	 * Méthode qui met sous écoute les touches du claviers et change l'état du jeu en fonction de l'option du menu qui est sélectionnée
+	 * Mï¿½thode qui met sous ï¿½coute les touches du claviers et change l'ï¿½tat du jeu en fonction de l'option du menu qui est sï¿½lectionnï¿½e
 	 */
 	public void menu() {
 		Menu menu = new Menu(this.root);
 		Orge orge = new Orge(menu.getOrge());
 		orge.selectNiveau = false;
-		
-		double margeDeCote;
+
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {

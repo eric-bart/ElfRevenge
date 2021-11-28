@@ -21,19 +21,20 @@ public class Niveau1 {
 	 */
 	private int generationTab[][] = 
 		{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,1},
-			{0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
-			{0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
-			{1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,1},
-			{2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,1}};
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+			{0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,2},
+			{0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+			{0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,2},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,6,0,0,0,0,0,2},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,1,0,2},
+			{0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,5,0,1,0,0,0,2},
+			{1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,2,0,0,0,2},
+			{2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,2}};
 
 	private ImageView lutin = new ImageView(new Image("lutin4.png"));
+	private ImageView bonhommeNeige = new ImageView(new Image("mob1.png"));
 	private Group root;
 	private ArrayList<Block> colisionBlocks;
 	private ArrayList<Block> generatedMap;
@@ -74,6 +75,7 @@ public class Niveau1 {
 			this.coordY+=64;
 		}
 		root.getChildren().add(this.lutin);
+		root.getChildren().add(this.bonhommeNeige);
 		System.out.println(root.getChildren().get(0));
 	}
 
@@ -94,6 +96,12 @@ public class Niveau1 {
 			return new TransparentBlock("cielNuage1png.png");
 		case 4:
 			return new TransparentBlock("cielNuage2.png");
+		case 5:
+			return new SolidBlock("barreFinale1.png");
+		case 6:
+			return new SolidBlock("barreFinale2.png");
+		case 7:
+			return new SolidBlock("mob1.png");
 		default:
 			return new TransparentBlock("ciel.png");
 		}
@@ -132,6 +140,10 @@ public class Niveau1 {
 	 */
 	public ArrayList<Block> getGeneration() {
 		return this.generatedMap;
+	}
+	
+	public ImageView getBonhommeNeige() {
+		return this.bonhommeNeige;
 	}
 	
 	/**
