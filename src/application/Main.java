@@ -29,7 +29,7 @@ public class Main extends Application {
 		etat=GameState.MENU;
 		root = new Group();
 		//On met en place le fond de la fenètre avec l'image background
-		scene = new Scene(root, Screen.getPrimary().getBounds().getMaxX(), 720);
+		scene = new Scene(root, 1280, 720);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		changeGameState();
-		scene.setFill(Color.web("9bbeff"));
+		scene.setFill(Color.web("99c6da"));
 		primaryStage.setTitle("ElfsRevenge");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);

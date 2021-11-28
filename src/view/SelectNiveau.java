@@ -3,28 +3,25 @@ package view;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Screen;
 
-public class Menu {
+public class SelectNiveau {
 
-	private ImageView backgroundMenu = new ImageView(new Image("start-screen.png"));
+	private ImageView background = new ImageView(new Image("selecteurNiveau.png"));
 	private ImageView orgeSelection = new ImageView(new Image("surcre_orge.png"));
 
-	public Menu(Group root) {
+	public SelectNiveau(Group root) {
 		root.getChildren().clear();
-		double taille = this.backgroundMenu.getLayoutBounds().getMaxX();
+		double taille = this.background.getLayoutBounds().getMaxX();
 		/*double marge = (Screen.getPrimary().getBounds().getMaxX()-taille)/2;
 		this.backgroundMenu.setX(marge);*/
-		root.getChildren().addAll(this.backgroundMenu, this.orgeSelection);
+		root.getChildren().addAll(this.background, this.orgeSelection);
 	}
 
 	public ImageView getBackground() {
-		return this.backgroundMenu;
+		return this.background;
 	}
 
 	public ImageView getOrge() {
 		return this.orgeSelection;
 	}
-
 }

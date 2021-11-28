@@ -27,6 +27,7 @@ public class MenuController {
 	public void menu() {
 		Menu menu = new Menu(this.root);
 		Orge orge = new Orge(menu.getOrge());
+		orge.selectNiveau = false;
 		
 		double margeDeCote;
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
