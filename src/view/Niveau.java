@@ -69,9 +69,9 @@ public abstract class Niveau {
 		case 4:
 			return new TransparentBlock("cielNuage2.png");
 		case 5:
-			return new SolidBlock("barreFinale1.png");
+			return new TransparentBlock("barreFinale1.png");
 		case 6:
-			return new SolidBlock("barreFinale2.png");
+			return new TransparentBlock("barreFinale2.png");
 		case 7:
 			return new SolidBlock("mob1.png");
 		default:

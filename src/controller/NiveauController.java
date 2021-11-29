@@ -116,7 +116,11 @@ public class NiveauController {
 					if(lutin.isMort()) {
 						boucle.stop();
 						scene.setFill(Color.web("9bbeff"));
-						Main.setGameState(GameState.MENU);
+						Main.setGameState(GameState.SELECT_NIVEAU);
+					}
+					if(lutin.niveauFini()) {
+						boucle.stop();
+						Main.setGameState(GameState.SELECT_NIVEAU);
 					}
 				}
 			};

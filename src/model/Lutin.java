@@ -162,7 +162,7 @@ public class Lutin extends Personnage {
 	@Override
 	public void sauter() {
 		if (!this.isDansLeCiel()) {
-			this.lutin.setY(this.lutin.getY()-150d);
+			this.lutin.setY(this.lutin.getY()-170d);
 			this.setVitesseY(1.6d);
 		}
 	}
@@ -174,5 +174,18 @@ public class Lutin extends Personnage {
 	
 	public void setVitesseY(double vitesse) {
 		this.vitesseY = vitesse;
+	}
+
+	public boolean niveauFini() {
+		if (this.blocDessousLutin()!=null) {
+			if (this.blocDessousLutin().getBlockName() == "barreFinale1.png" || this.blocDessousLutin().getBlockName() == "barreFinale2.png") {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		
 	}
 }
