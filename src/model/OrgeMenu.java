@@ -29,17 +29,17 @@ public class OrgeMenu {
 		case 0:
 			//Le sucre d'orge pointe sur "jouer"
 			this.orge.setY(285);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-260);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-510);
 			break;
 		case 1: 
 			//Le sucre d'orge pointe sur "customisation"
 			this.orge.setY(360);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-325);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-580);
 			break;
 		case 2:
 			//Le sucre d'orge pointe sur "param�tres"
 			this.orge.setY(440);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-310);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-560);
 			break;
 		default :
 			//Le sucre d'orge pointe sur "jouer"

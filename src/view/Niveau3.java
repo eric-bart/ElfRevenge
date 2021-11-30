@@ -20,7 +20,7 @@ import model.TransparentBlock;
 import controller.FileManager;
 
 
-public class Niveau1 extends Niveau {
+public class Niveau3 extends Niveau {
 
 	/**
 	 * Tableau représentant la map qui va être générée
@@ -45,7 +45,7 @@ public class Niveau1 extends Niveau {
 	private ImageView bonhommeNeige = new ImageView(new Image("mob1.png"));
 	private Group root;
 
-	public Niveau1(Group root) {
+	public Niveau3(Group root) {
 		super(root);
 		this.root=root;
 		this.generateLevel(this.generationTab);
@@ -75,9 +75,9 @@ public class Niveau1 extends Niveau {
 	public void fini() {
 		FileManager fileManager = new FileManager();
 		HashMap<String, DonneesNiveau> recup = (HashMap<String, DonneesNiveau>)fileManager.readFile("donnees");
-		DonneesNiveau d1 = recup.get("niveau1");
+		DonneesNiveau d1 = recup.get("niveau3");
 		d1.setFini(true);
-		recup.put("niveau1", d1);
+		recup.put("niveau3", d1);
 		fileManager.writeToFile("donnees", recup);
 	}
 }

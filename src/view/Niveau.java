@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.Block;
 import model.Personnage;
@@ -19,6 +20,8 @@ public abstract class Niveau {
 	private ArrayList<Personnage> mobAffiche;
 	private double coordX;
 	private double coordY;
+	private ImageView lutin = new ImageView(new Image("lutin4.png"));
+	private ImageView bonhommeNeige = new ImageView(new Image("mob1.png"));
 
 	public Niveau(Group root) {
 		root.getChildren().clear();
@@ -116,5 +119,12 @@ public abstract class Niveau {
 	
 	public Label getChronometre() {
 		return this.chronometre;
+	}
+	public ImageView getLutin() {
+		return this.lutin;
+	}
+	
+	public ImageView getBonhommeNeige() {
+		return this.bonhommeNeige;
 	}
 }

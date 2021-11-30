@@ -16,7 +16,7 @@ import model.BonhommeDeNeige;
 import model.Chronometre;
 import model.GameState;
 import model.Lutin;
-import view.Niveau1;
+import view.*;
 import application.Main;
 
 public class NiveauController {
@@ -46,6 +46,18 @@ public class NiveauController {
 			deplacement(niveau1);
 			setListeners();
 			break;
+			/** Ne marche pas parce qu'il faut refactorer la fonction deplacement en dessous
+		case NIVEAU2:
+			Niveau2 niveau2 = new Niveau2(this.root);
+			deplacement(niveau2);
+			setListeners();
+			break;
+		case NIVEAU3:
+			Niveau1 niveau3 = new Niveau3(this.root);
+			deplacement(niveau3);
+			setListeners();
+			break;
+			**/
 		}
 	}
 
@@ -120,6 +132,20 @@ public class NiveauController {
 					}
 					if(lutin.niveauFini()) {
 						boucle.stop();
+						switch(etat) {
+						case NIVEAU1 : 
+							Niveau1 n1 = new Niveau1(root);
+							n1.fini();
+							break;
+						case NIVEAU2 : 
+							Niveau2 n2 = new Niveau2(root);
+							n2.fini();
+							break;
+						case NIVEAU3 : 
+							Niveau3 n3 = new Niveau3(root);
+							n3.fini();
+							break;
+						}
 						Main.setGameState(GameState.SELECT_NIVEAU);
 					}
 				}

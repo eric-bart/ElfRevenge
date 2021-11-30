@@ -29,21 +29,21 @@ public class OrgeSelectNiveau {
 		case 0:
 			//Le sucre d'orge pointe sur "NIVEAU1"
 			this.orge.setY(600);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-320);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-580);
 			break;
 		case 1: 
 			//Le sucre d'orge pointe sur "NIVEAU2"
 			this.orge.setY(600);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-50);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-300);
 			break;
 		case 2:
 			//Le sucre d'orge pointe sur "NIVEAU3"
 			this.orge.setY(600);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)+235);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-20);
 			break;
 		default:
 			this.orge.setY(600);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-320);
+			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-420);
 			break;
 		}
 	}

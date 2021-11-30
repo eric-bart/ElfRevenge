@@ -1,5 +1,11 @@
 package application;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import controller.FileManager;
 import controller.MenuController;
 import controller.NiveauController;
 import controller.PauseController;
@@ -10,8 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import model.DonneesNiveau;
 import model.GameState;
-import view.Niveau1;
 
 
 public class Main extends Application {
@@ -20,8 +26,7 @@ public class Main extends Application {
 	public static Scene scene;
 	public static GameState etat;
 	public Stage fenetre;
-
-
+	HashMap<String, DonneesNiveau> map;
 	/**
 	 * Initialise le lancement du jeu.
 	 */
@@ -46,7 +51,23 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
-	}
+		FileManager fileManager = new FileManager();
+		if(!fileManager.isFileCreated("donnees")) {
+			DonneesNiveau donneeNiveau1 = new DonneesNiveau(false, 0);
+			DonneesNiveau donneeNiveau2 = new DonneesNiveau(false, 0);
+			DonneesNiveau donneeNiveau3 = new DonneesNiveau(false, 0);
+			map = new HashMap<String, DonneesNiveau>();
+			map.put("niveau1", donneeNiveau1);
+			map.put("niveau2", donneeNiveau2);
+			map.put("niveau3", donneeNiveau3);
+			fileManager.writeToFile("donnees", map);
+		}
+		HashMap<String, DonneesNiveau> read = (HashMap<String, DonneesNiveau>) fileManager.readFile("donnees");
+			for(Map.Entry<String, DonneesNiveau> entry : read.entrySet()) {
+			    DonneesNiveau donneeNiveau = entry.getValue();
+			    System.out.println(donneeNiveau.toString());
+				}	
+			}
 
 	/**
 	 * Cette fonction permet de rediriger vers d'autres vues et controlleurs en fonction de l'état du jeu.
@@ -87,12 +108,12 @@ public class Main extends Application {
 			break;
 		case NIVEAU2:
 			//Lancement du niveau2
-			System.out.println("Lancement du niveau 2");
+			NiveauController niveauController2 = new NiveauController(root, scene, etat);
 			System.out.println(etat);
 			break;
 		case NIVEAU3:
 			//Lancement du niveau3
-			System.out.println("Lancement du niveau 3");
+			NiveauController niveauController3 = new NiveauController(root, scene, etat);
 			System.out.println(etat);
 			break;
 		}
