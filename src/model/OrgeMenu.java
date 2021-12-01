@@ -5,7 +5,7 @@ import javafx.stage.Screen;
 
 public class OrgeMenu {
 
-	private String[] options = {"JOUER", "CUSTOMISER", "OPTIONS"};
+	private String[] options = {"JOUER", "CUSTOMISER", "CONTROLES"};
 	private ImageView orge;
 	private int selectedOpt;
 

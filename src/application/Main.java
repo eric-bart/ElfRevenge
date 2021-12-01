@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controller.ControleController;
+import controller.CustomisationController;
 import controller.FileManager;
 import controller.MenuController;
 import controller.NiveauController;
@@ -27,6 +29,8 @@ public class Main extends Application {
 	public static GameState etat;
 	public Stage fenetre;
 	HashMap<String, DonneesNiveau> map;
+	HashMap<String, Integer> skin;
+
 	/**
 	 * Initialise le lancement du jeu.
 	 */
@@ -52,6 +56,11 @@ public class Main extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 		FileManager fileManager = new FileManager();
+		if(!fileManager.isFileCreated("skin")) {
+			skin = new HashMap<String, Integer>();
+			skin.put("skin", 0);
+			fileManager.setSkin("skin", skin);
+		}
 		if(!fileManager.isFileCreated("donnees")) {
 			DonneesNiveau donneeNiveau1 = new DonneesNiveau(false, 0);
 			DonneesNiveau donneeNiveau2 = new DonneesNiveau(false, 0);
@@ -61,13 +70,13 @@ public class Main extends Application {
 			map.put("niveau2", donneeNiveau2);
 			map.put("niveau3", donneeNiveau3);
 			fileManager.writeToFile("donnees", map);
-		}
 		HashMap<String, DonneesNiveau> read = (HashMap<String, DonneesNiveau>) fileManager.readFile("donnees");
 			for(Map.Entry<String, DonneesNiveau> entry : read.entrySet()) {
 			    DonneesNiveau donneeNiveau = entry.getValue();
 			    System.out.println(donneeNiveau.toString());
 				}	
-			}
+		}
+	}
 
 	/**
 	 * Cette fonction permet de rediriger vers d'autres vues et controlleurs en fonction de l'état du jeu.
@@ -85,14 +94,16 @@ public class Main extends Application {
 			PauseController pause = new PauseController(root, scene);
 			pause.pause();
 			break;
-		case PARAMETRES:
-			//Lancement des paramètres
-			System.out.println("Lancement des paramètres");
+		case CONTROLES:
+			//Lancement des controles
+			ControleController ctrl = new ControleController(root, scene);
+			ctrl.controles();
 			System.out.println(etat);
 			break;
 		case CUSTOMISATION:
 			//Lancement de l'écran de customisation
-			System.out.println("Lancement de l'écran de customisation");
+			CustomisationController custom = new CustomisationController(root,scene);
+			custom.selectionSkin();
 			System.out.println(etat);
 			break;
 		case SELECT_NIVEAU:

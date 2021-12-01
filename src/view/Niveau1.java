@@ -41,7 +41,7 @@ public class Niveau1 extends Niveau {
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},};
 
-	private ImageView lutin = new ImageView(new Image("lutin4.png"));
+	private ImageView lutin = this.getSkin();
 	private ImageView bonhommeNeige = new ImageView(new Image("mob1.png"));
 	private Group root;
 
@@ -66,6 +66,7 @@ public class Niveau1 extends Niveau {
 	}
 	
 	public ImageView getLutin() {
+		super.getSkin();
 		return this.lutin;
 	}
 	

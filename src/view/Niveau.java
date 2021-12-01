@@ -1,7 +1,10 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import controller.FileManager;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -20,7 +23,7 @@ public abstract class Niveau {
 	private ArrayList<Personnage> mobAffiche;
 	private double coordX;
 	private double coordY;
-	private ImageView lutin = new ImageView(new Image("lutin4.png"));
+	private ImageView lutin = new ImageView(new Image("lutinVert.png"));
 	private ImageView bonhommeNeige = new ImageView(new Image("mob1.png"));
 
 	public Niveau(Group root) {
@@ -119,6 +122,28 @@ public abstract class Niveau {
 	
 	public Label getChronometre() {
 		return this.chronometre;
+	}
+	public ImageView getSkin() {
+		FileManager fileManager = new FileManager();
+		ImageView skinLutin = new ImageView();
+		HashMap<String, Integer> read = (HashMap<String, Integer>) fileManager.readFile("skin");
+		for(Map.Entry<String, Integer> entry : read.entrySet()) {
+		    Integer skin = entry.getValue();
+		    switch(skin) {
+		    case 0 : 
+		    	skinLutin = new ImageView(new Image("lutinBleu.png"));
+		    	break;
+		    case 1 : 
+		    	skinLutin = new ImageView(new Image("lutinRouge.png"));
+		    	break;
+		    case 2 : 
+		    	skinLutin = new ImageView(new Image("lutinVert.png"));
+		    	break;
+		    default : 
+		    	skinLutin = new ImageView(new Image("lutinVert.png"));
+		    }
+		
+		}return skinLutin;
 	}
 	public ImageView getLutin() {
 		return this.lutin;

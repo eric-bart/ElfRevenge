@@ -25,6 +25,18 @@ public class FileManager {
 	      return false;
 	    }
 	}
+	public boolean setSkin(String nom, HashMap<String, Integer> data) {
+		try{
+				FileOutputStream f = new FileOutputStream("src\\data\\"+nom);
+			    ObjectOutput s = new ObjectOutputStream(f); 
+			    s.writeObject(data);
+			    return true;
+	    } catch (IOException e) {
+	      System.out.println("An error occurred.");
+	      e.printStackTrace();
+	      return false;
+	    }
+	}
 	public Object readFile(String nom) {
 			try {
 				 
