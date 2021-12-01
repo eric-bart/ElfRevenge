@@ -16,7 +16,10 @@ import model.BonhommeDeNeige;
 import model.Chronometre;
 import model.GameState;
 import model.Lutin;
-import view.*;
+import view.Niveau;
+import view.Niveau1;
+import view.Niveau2;
+import view.Niveau3;
 import application.Main;
 
 public class NiveauController {
@@ -46,18 +49,16 @@ public class NiveauController {
 			deplacement(niveau1);
 			setListeners();
 			break;
-			/** Ne marche pas parce qu'il faut refactorer la fonction deplacement en dessous
 		case NIVEAU2:
 			Niveau2 niveau2 = new Niveau2(this.root);
 			deplacement(niveau2);
 			setListeners();
 			break;
 		case NIVEAU3:
-			Niveau1 niveau3 = new Niveau3(this.root);
+			Niveau3 niveau3 = new Niveau3(this.root);
 			deplacement(niveau3);
 			setListeners();
 			break;
-			**/
 		}
 	}
 
@@ -67,60 +68,61 @@ public class NiveauController {
 	 *!\ A REFACTORER /!
 	 * @param niveau
 	 */
-	public void deplacement(Niveau1 niveau) {
-		lutin = new Lutin(niveau.getLutin(), 0, 400, niveau);
-		bonhommeNeige = new BonhommeDeNeige(niveau.getBonhommeNeige(), 100, 400, niveau);
+	public void deplacement(Niveau niveau) {
+		lutin = new Lutin(niveau.getLutin(), 100, 100, niveau);
 		chronometre = new Chronometre(niveau.getChronometre());
+		ArrayList<BonhommeDeNeige> mobsMorts = new ArrayList<BonhommeDeNeige>();
 		try {
 			this.boucle = new AnimationTimer() {
 				private long lastUpdate = 0;
 				@Override
 				public void handle(long now) {
 					if (now - lastUpdate >= 1000_000_000) { // delay de 1000 ms
-	                    chronometre.ajouter();
-	                    lastUpdate = now;
-	                }
-					if(lutin.blocDessousLutin()!=null) {
+						lutin.setRebond(false);
+						chronometre.ajouter();
+						lastUpdate = now;
+					}
+					if(lutin.blocDurDirectDessousLutin()!=null) {
 						if(lutin.isDansLeCiel()) {
 							lutin.tombe();
 						}
 					} else {
 						lutin.tombe();
 					}
-					if(lutin.blocDroiteLutin()!=null) {
-						if(!lutin.isColisionDroite(lutin.blocDroiteLutin())) {
-							if (lutin.isDeplacementDroite()) {
-								lutin.seDeplace();
-							}
-						}
-					} else {
-						lutin.tombe();
+					if (lutin.isDeplacementDroite()) {
+						lutin.seDeplace();
+					}
+					if (lutin.isDeplacementGauche()) {
+						lutin.seDeplace();
 					}
 
-					if(lutin.blocGaucheLutin()!=null) {
-						if(!lutin.isColisionGauche(lutin.blocGaucheLutin())) {
-							if (lutin.isDeplacementGauche()) {
-								lutin.seDeplace();
+					if(!niveau.getMobAffiche().isEmpty()) {
+						niveau.getMobAffiche().forEach(e -> {
+							e.getPersonnage().toFront();
+							if(e.blocDurDirectDessousLutin()!=null) {
+								if(e.isDansLeCiel()) {
+									e.tombe();
+								} else {
+									e.seDeplace();
+								}
+							} else {
+								e.tombe();
 							}
-						}
-					} else {
-						lutin.tombe();
+							if(lutin.isColisionMob(e)) {
+								application.Main.setGameState(GameState.MENU);
+								boucle.stop();
+							}
+							if(e.isMort(lutin)) {
+								lutin.rebond();
+								root.getChildren().remove(e.getPersonnage());
+								mobsMorts.add(e);
+							}
+						});
 					}
-					
-					/**if(bonhommeNeige.blocDessousLutin()!=null) {
-						if(bonhommeNeige.isDansLeCiel()) {
-							bonhommeNeige.tombe();
-						}
-					} else {
-						bonhommeNeige.tombe();
-					}
-					
-					if(bonhommeNeige.isDansFenetre()) {
-						bonhommeNeige.seDeplace();
-					} else {
-						bonhommeNeige.recule();
-					}**/
-					
+
+					niveau.getMobAffiche().removeAll(mobsMorts);
+
+
 					if(lutin.isSaut()&&lutin.getRaterri()) {
 						lutin.sauter();
 						lutin.setRaterri(false);
@@ -128,22 +130,20 @@ public class NiveauController {
 					if(lutin.isMort()) {
 						boucle.stop();
 						scene.setFill(Color.web("9bbeff"));
-						Main.setGameState(GameState.SELECT_NIVEAU);
+						Main.setGameState(GameState.MENU);
 					}
+
 					if(lutin.niveauFini()) {
 						boucle.stop();
 						switch(etat) {
 						case NIVEAU1 : 
-							Niveau1 n1 = new Niveau1(root);
-							n1.fini();
+							view.Niveau1.fini();
 							break;
 						case NIVEAU2 : 
-							Niveau2 n2 = new Niveau2(root);
-							n2.fini();
+							view.Niveau2.fini();
 							break;
 						case NIVEAU3 : 
-							Niveau3 n3 = new Niveau3(root);
-							n3.fini();
+							view.Niveau3.fini();
 							break;
 						}
 						Main.setGameState(GameState.SELECT_NIVEAU);
@@ -186,7 +186,7 @@ public class NiveauController {
 				}
 			}
 		});
-		
+
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {

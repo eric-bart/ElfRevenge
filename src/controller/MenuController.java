@@ -39,8 +39,8 @@ public class MenuController {
 					case "CUSTOMISER":
 						application.Main.setGameState(GameState.CUSTOMISATION);
 						break;
-					case "OPTIONS":
-						application.Main.setGameState(GameState.PARAMETRES);
+					case "CONTROLES":
+						application.Main.setGameState(GameState.CONTROLES);
 						break;
 					}
 					return;

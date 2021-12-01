@@ -1,6 +1,7 @@
 package model;
 
 import javafx.scene.image.ImageView;
+import view.Niveau;
 import view.Niveau1;
 
 public abstract class Personnage {
@@ -10,13 +11,13 @@ public abstract class Personnage {
 	private boolean saut;
 	private int timerSaut;
 	private ImageView imagePersonnage;
-	private Niveau1 niveau;
+	private Niveau niveau;
 	private double coordMapMaxX;
 	private double coordMapCentreX;
 	private double coordMapMinX;
 	private boolean raterri;
 	
-	public Personnage(ImageView imagePersonnage, double coordScreenX, double coordScreenY, Niveau1 niveau) {
+	public Personnage(ImageView imagePersonnage, double coordScreenX, double coordScreenY, Niveau niveau) {
 		this.niveau = niveau;
 		this.imagePersonnage = imagePersonnage;
 		this.imagePersonnage.setX(coordScreenX);
@@ -37,21 +38,6 @@ public abstract class Personnage {
 	
 	public abstract boolean isMort();
 	
-	public boolean isColisionGauche(Block image) {
-		return this.imagePersonnage.getLayoutBounds().getMinX()>=image.getBlock().getLayoutBounds().getMinX() 
-				&& this.imagePersonnage.getLayoutBounds().getMinX()<= image.getBlock().getLayoutBounds().getMaxX()
-				&& (this.imagePersonnage.getLayoutBounds().getMaxY()>=image.getBlock().getLayoutBounds().getMaxY()
-				|| this.imagePersonnage.getLayoutBounds().getMaxY()<=image.getBlock().getLayoutBounds().getMinY())
-				&& image.isHardBlock();
-	}
-
-
-	public boolean isColisionDroite(Block image) {
-		return this.imagePersonnage.getLayoutBounds().getMaxX()>=image.getBlock().getLayoutBounds().getMinX() 
-				&& this.imagePersonnage.getLayoutBounds().getMaxX() <= image.getBlock().getLayoutBounds().getMaxX()
-				&& this.imagePersonnage.getLayoutBounds().getMaxY()>=image.getBlock().getLayoutBounds().getMinY()-5
-				&& image.isHardBlock();
-	}
 
 	/**
 	 * Vérifie si le personnage est dans le vide ou pas.
@@ -66,6 +52,43 @@ public abstract class Personnage {
 			return this.imagePersonnage.getLayoutBounds().getMaxY()<=this.blocDurDirectDessousLutin().getBlock().getLayoutBounds().getMinY();
 		}
 	}
+	
+	public Block blockDurDirectDessusLutin(int distanceHaut) {
+		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+			if((((int) this.getCoordMapMaxX()/Block.blockXSize 
+				+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() && ((int) this.getCoordMapMaxX()/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length) >0)
+				|| (((int) this.getCoordMapMinX()/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() && (((int) this.getCoordMapMinX()/Block.blockXSize 
+								+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+								* niveau.getGenerationMap()[0].length)> 0))) {
+			if(niveau.getGeneration().get(((int) this.getCoordMapMaxX()/Block.blockXSize 
+					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
+				return niveau.getGeneration().get(((int) this.getCoordMapMaxX()/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length));
+			} else if (niveau.getGeneration().get(((int) this.getCoordMapMinX()/Block.blockXSize 
+					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
+				return niveau.getGeneration().get(((int) this.getCoordMapMinX()/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length));
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+		} else {
+			return null;
+		}
+		
+	}
+	
 
 	/**
 	 * Retourne le bloc situé en dessous du lutin
@@ -76,7 +99,8 @@ public abstract class Personnage {
 		//SI LE MAXX A EN DESSOUS DE LUI UN BLOC NON DUR
 		//REGARDER LE MINX, SI LE MINY A EN DESSOUS DE LUI UN BLOC NON DUR
 		//RENVOYER NULL
-		if(((int) this.getCoordMapMaxX()/Block.blockXSize 
+		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+			if(((int) this.getCoordMapMaxX()/Block.blockXSize 
 				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
 				|| ((int) this.getCoordMapMinX()/Block.blockXSize 
@@ -100,17 +124,33 @@ public abstract class Personnage {
 		} else {
 			return null;
 		}
+		} else {
+			return null;
+		}
+		
 	}
-
-	public Block blocDurDirectDroiteLutin() {
-		if((((int) this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY())/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			if(niveau.getGeneration().get((((int) this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY())/Block.blockXSize)
+	
+	public Block blockDurDirectDroiteLutin() {
+		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+			if((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
+				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
+				|| (((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY()-10)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
+			if(niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
+					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
 					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				return niveau.getGeneration().get((((int) this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY())/Block.blockXSize)
+				System.out.println("Y a bien un bloc");
+				return niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length));
+			} else if (niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
+					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
+					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
+				System.out.println("y a bien ce bloc");
+				return niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
 						* niveau.getGenerationMap()[0].length));
 			} else {
 				return null;
@@ -118,17 +158,33 @@ public abstract class Personnage {
 		} else {
 			return null;
 		}
+		} else {
+			return null;
+		}
+		
 	}
-
-	public Block blocDurDirectGaucheLutin() {
-		if((((int) this.getCoordMapCentreX()-Block.blockXSize)/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY())/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			if(niveau.getGeneration().get((((int) this.getCoordMapCentreX()-Block.blockXSize)/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY())/Block.blockXSize)
+	
+	public Block blockDurDirectGaucheLutin() {
+		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+			if((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
+				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
+				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
+				|| (((int) this.getCoordMapMinX()-2)/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY()-10)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
+			if(niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
+					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
 					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				return niveau.getGeneration().get((((int) this.getCoordMapCentreX()-Block.blockXSize)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY())/Block.blockXSize)
+				System.out.println("Y a bien un bloc");
+				return niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
+						* niveau.getGenerationMap()[0].length));
+			} else if (niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
+					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
+					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
+				System.out.println("y a bien ce bloc");
+				return niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
+						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
 						* niveau.getGenerationMap()[0].length));
 			} else {
 				return null;
@@ -136,57 +192,10 @@ public abstract class Personnage {
 		} else {
 			return null;
 		}
-	}
-
-	/**
-	 * Retourne le bloc situé en dessous du lutin
-	 * @param niveau
-	 * @return ImageView le bloc situé en dessous du lutin
-	 */
-	public Block blocDessousLutin() {
-		if(((int) this.getCoordMapMaxX()/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getCenterY() + Block.blockXSize)/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			return niveau.getGeneration().get(((int) this.getCoordMapMaxX()/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getCenterY() + Block.blockXSize)/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length));
 		} else {
 			return null;
 		}
-	}
-
-	/**
-	 * Retourne le bloc situé à droite du lutin
-	 * @param niveau
-	 * @return ImageView le bloc situé à droite du lutin
-	 */
-	public Block blocDroiteLutin() {
-		if((((int) this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getCenterY())/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			return niveau.getGeneration().get((((int) this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getCenterY())/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length));
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Retourne le bloc situé à gauche du lutin
-	 * @param niveau
-	 * @return ImageView le bloc situé à gauche du lutin
-	 */
-	public Block blocGaucheLutin() {
-		if((((int) this.getCoordMapCentreX()-Block.blockXSize)/Block.blockXSize
-				+ (((int) this.imagePersonnage.getLayoutBounds().getCenterY())/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			return niveau.getGeneration().get((((int) this.getCoordMapCentreX()-Block.blockXSize)/Block.blockXSize
-					+ (((int) this.imagePersonnage.getLayoutBounds().getCenterY())/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length));
-		} else {
-			return null;
-		}
+		
 	}
 	
 	public boolean getDeplacementGauche() {

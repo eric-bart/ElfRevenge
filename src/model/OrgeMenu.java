@@ -5,7 +5,7 @@ import javafx.stage.Screen;
 
 public class OrgeMenu {
 
-	private String[] options = {"JOUER", "CUSTOMISER", "OPTIONS"};
+	private String[] options = {"JOUER", "CUSTOMISER", "CONTROLES"};
 	private ImageView orge;
 	private int selectedOpt;
 
@@ -29,22 +29,22 @@ public class OrgeMenu {
 		case 0:
 			//Le sucre d'orge pointe sur "jouer"
 			this.orge.setY(285);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-510);
+			this.orge.setX((application.Main.fenetre.getWidth()/2)-170);
 			break;
 		case 1: 
 			//Le sucre d'orge pointe sur "customisation"
 			this.orge.setY(360);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-580);
+			this.orge.setX((application.Main.fenetre.getWidth()/2)-235);
 			break;
 		case 2:
 			//Le sucre d'orge pointe sur "param�tres"
 			this.orge.setY(440);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-560);
+			this.orge.setX((application.Main.fenetre.getWidth()/2)-220);
 			break;
 		default :
 			//Le sucre d'orge pointe sur "jouer"
 			this.orge.setY(285);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-260);
+			this.orge.setX((application.Main.fenetre.getWidth()/2)-170);
 			break;
 		}
 	}

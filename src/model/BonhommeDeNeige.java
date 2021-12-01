@@ -2,6 +2,7 @@ package model;
 
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
+import view.Niveau;
 import view.Niveau1;
 
 public class BonhommeDeNeige extends Personnage {
@@ -20,14 +21,14 @@ public class BonhommeDeNeige extends Personnage {
 	private double coordMapMaxX;
 	private double coordMapCentreX;
 	private double coordMapMinX;
-	private Niveau1 niveau;
-	
+	private Niveau niveau;
+
 	private boolean colisionADroite=false;
 	private boolean colisionAGauche=false;
 	private boolean doitReculer=false;
-	
-	
-	public BonhommeDeNeige(ImageView bonhommeNeige, double coordScreenX, double coordScreenY, Niveau1 niveau) {
+
+
+	public BonhommeDeNeige(ImageView bonhommeNeige, double coordScreenX, double coordScreenY, Niveau niveau) {
 		super(bonhommeNeige, coordScreenX, coordScreenY, niveau);
 		this.niveau = niveau;
 		this.bonhommeNeige= bonhommeNeige;
@@ -53,65 +54,39 @@ public class BonhommeDeNeige extends Personnage {
 	 */
 	@Override
 	public void seDeplace() {
-		if(blocDroiteLutin()!=null) {
-			if(!isDansLeCiel()) {
-				if(this.getBonhommeNeige().getLayoutBounds().getMaxX()>500) {
-					this.doitReculer=true;
-					this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()-5);
-					this.setCoordMapMaxX(this.getCoordMapMaxX() -5);
-					this.setCoordMapCentreX(this.getCoordMapCentreX() -5);
-					this.setCoordMapMinX(this.getCoordMapMinX() -5);
-				} else {
-					if(!isColisionDroite(blocDroiteLutin()) && !this.colisionADroite) {
-					this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()+getVITESSE_DEPLACEMENT());
-					this.setCoordMapMaxX(this.getCoordMapMaxX() + getVITESSE_DEPLACEMENT());
-					this.setCoordMapCentreX(this.getCoordMapCentreX() + getVITESSE_DEPLACEMENT());
-					this.setCoordMapMinX(this.getCoordMapMinX() + getVITESSE_DEPLACEMENT());
-					System.out.println("Coord bonhomme neige " + this.getBonhommeNeige().getLayoutBounds().toString());
-					System.out.println("Coord du bloc à droite " + blocDroiteLutin().getBlock().getLayoutBounds().toString());
-				} else if(!isColisionGauche(blocGaucheLutin())){
-					this.colisionADroite = true;
-					this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()-getVITESSE_DEPLACEMENT());
-					this.setCoordMapMaxX(this.getCoordMapMaxX() - getVITESSE_DEPLACEMENT());
-					this.setCoordMapCentreX(this.getCoordMapCentreX() - getVITESSE_DEPLACEMENT());
-					this.setCoordMapMinX(this.getCoordMapMinX() - getVITESSE_DEPLACEMENT());
-				} else {
-					this.colisionAGauche=true;
-					this.colisionADroite=false;
-				}
-				}
-				
+		if(!isDansLeCiel()) {
+			if(this.blockDurDirectDroiteLutin()==null && !this.colisionADroite) {
+				this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()+getVITESSE_DEPLACEMENT());
+				this.setCoordMapMaxX(this.getCoordMapMaxX() + getVITESSE_DEPLACEMENT());
+				this.setCoordMapCentreX(this.getCoordMapCentreX() + getVITESSE_DEPLACEMENT());
+				this.setCoordMapMinX(this.getCoordMapMinX() + getVITESSE_DEPLACEMENT());
+			} else if(this.blockDurDirectGaucheLutin()==null){
+				this.colisionADroite = true;
+				this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()-getVITESSE_DEPLACEMENT());
+				this.setCoordMapMaxX(this.getCoordMapMaxX() - getVITESSE_DEPLACEMENT());
+				this.setCoordMapCentreX(this.getCoordMapCentreX() - getVITESSE_DEPLACEMENT());
+				this.setCoordMapMinX(this.getCoordMapMinX() - getVITESSE_DEPLACEMENT());
+			} else {
+				this.colisionAGauche=true;
+				this.colisionADroite=false;
 			}
 		}
+
 	}
 	
-	/**
-	 * Retourne le bloc situé à droite du lutin
-	 * @param niveau
-	 * @return ImageView le bloc situé à droite du lutin
-	 */
-	public Block blocDurDurDroiteLutin() {
-		for(int i=((int)this.getCoordMapCentreX()+Block.blockXSize)/Block.blockXSize; i<niveau.getGenerationMap()[(((int) this.bonhommeNeige.getLayoutBounds().getCenterY())/Block.blockXSize)
-		                     					* niveau.getGenerationMap()[0].length].length;i++) {
-			if(this.niveau.getGenerationMap()[(((int) this.bonhommeNeige.getLayoutBounds().getCenterY())/Block.blockXSize)
-		                     					* niveau.getGenerationMap()[0].length][i]==1) {
-			return niveau.getGeneration().get((((int) this.bonhommeNeige.getLayoutBounds().getCenterY())/Block.blockXSize)
- 					* niveau.getGenerationMap()[0].length+i);
-			}
-				
+	public boolean isMort(Lutin lutin) {
+		double maxXLutin = lutin.getPersonnage().getLayoutBounds().getMaxX();
+		double minXLutin = lutin.getPersonnage().getLayoutBounds().getMinX();
+		double maxYLutin = lutin.getPersonnage().getLayoutBounds().getMaxY();
+		double minYLutin = lutin.getPersonnage().getLayoutBounds().getMinY();
+		if(maxYLutin>=this.getPersonnage().getLayoutBounds().getMinY() && maxYLutin<=this.getPersonnage().getLayoutBounds().getMinY()+10
+				&& (minXLutin>this.getPersonnage().getLayoutBounds().getMinX() && minXLutin<this.getPersonnage().getLayoutBounds().getMaxX() ||
+				maxXLutin<this.getPersonnage().getLayoutBounds().getMaxX() && maxXLutin>this.getPersonnage().getLayoutBounds().getMinX())) {
+			return true;
 		}
-		return null;
+		return false;
 	}
 
-	
-	public void recule() {
-		this.VITESSE_DEPLACEMENT = 5;
-		this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()-VITESSE_DEPLACEMENT);
-		this.setCoordMapMaxX(this.getCoordMapMaxX() -VITESSE_DEPLACEMENT);
-		this.setCoordMapCentreX(this.getCoordMapCentreX() -VITESSE_DEPLACEMENT);
-		this.setCoordMapMinX(this.getCoordMapMinX() -VITESSE_DEPLACEMENT);
-	}
-	
 	public boolean isDansFenetre() {
 		if(this.getBonhommeNeige().getLayoutBounds().getMinX()<0-this.getBonhommeNeige().getLayoutBounds().getWidth() || this.getBonhommeNeige().getLayoutBounds().getMinX()>1280+this.getBonhommeNeige().getLayoutBounds().getWidth()) {
 			if(!niveau.getMobAffiche().contains(this.getBonhommeNeige())) {
@@ -121,17 +96,17 @@ public class BonhommeDeNeige extends Personnage {
 		}
 		return true;
 	}
-	
+
 	public double getVitesse() {
 		return getVITESSE_DEPLACEMENT();
 	}
-	
+
 	@Override
 	public void tombe() {
 		this.bonhommeNeige.setY(this.bonhommeNeige.getY() + this.vitesseY);
 		this.vitesseY=this.vitesseY + G;
 	}
-	
+
 	@Override
 	public void sauter() {
 		if (!this.isDansLeCiel()) {
@@ -139,7 +114,7 @@ public class BonhommeDeNeige extends Personnage {
 			this.setVitesseY(1.6d);
 		}
 	}
-	
+
 	public void setVitesseY(double vitesse) {
 		this.vitesseY = vitesse;
 	}

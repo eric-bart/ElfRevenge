@@ -1,12 +1,16 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import controller.FileManager;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.Block;
+import model.BonhommeDeNeige;
 import model.Personnage;
 import model.SolidBlock;
 import model.TransparentBlock;
@@ -17,18 +21,22 @@ public abstract class Niveau {
 	private Group root;
 	private ArrayList<Block> colisionBlocks;
 	private ArrayList<Block> generatedMap;
-	private ArrayList<Personnage> mobAffiche;
+	private ArrayList<BonhommeDeNeige> mobAffiche;
 	private double coordX;
 	private double coordY;
-	private ImageView lutin = new ImageView(new Image("lutin4.png"));
-	private ImageView bonhommeNeige = new ImageView(new Image("mob1.png"));
+	private int[][] generationTab;
+	private ImageView lutin;
 
-	public Niveau(Group root) {
+	public Niveau(Group root, int[][] generationTab) {
 		root.getChildren().clear();
+		this.lutin = this.getSkin();
+		this.generationTab = generationTab;
 		this.root=root;
 		this.generatedMap = new ArrayList<Block>();
 		this.colisionBlocks = new ArrayList<Block>();
-		this.mobAffiche = new ArrayList<Personnage>();
+		this.mobAffiche = new ArrayList<BonhommeDeNeige>();
+		this.coordX=0;
+		this.coordY=0;
 	}
 	
 	public abstract void addEntities();
@@ -45,6 +53,11 @@ public abstract class Niveau {
 				addBlockToList(newBlock);
 				newBlock.getBlock().setX(this.coordX);
 				newBlock.getBlock().setY(this.coordY);
+				if(isMobBlock(generationTab[i][j])) {
+					BonhommeDeNeige mob = new BonhommeDeNeige(new ImageView(new Image("mob1.png")), this.coordX, this.coordY, this);
+					root.getChildren().addAll(mob.getPersonnage());
+					this.mobAffiche.add(mob);
+				}
 				this.coordX+=64;
 			}
 			this.coordX=0;
@@ -52,6 +65,13 @@ public abstract class Niveau {
 		}
 		root.getChildren().add(this.chronometre);
 		System.out.println(root.getChildren().get(0));
+	}
+	
+	public boolean isMobBlock(int i) {
+		if(i==20) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -72,14 +92,20 @@ public abstract class Niveau {
 		case 4:
 			return new TransparentBlock("cielNuage2.png");
 		case 5:
-			return new TransparentBlock("barreFinale1.png");
+			return new SolidBlock("barreFinale1.png");
 		case 6:
-			return new TransparentBlock("barreFinale2.png");
+			return new SolidBlock("barreFinale2.png");
 		case 7:
 			return new SolidBlock("mob1.png");
+		case 20:
+			return new TransparentBlock("ciel.png");
 		default:
 			return new TransparentBlock("ciel.png");
 		}
+	}
+	
+	public ImageView getLutin() {
+		return this.lutin;
 	}
 	
 	/**
@@ -93,12 +119,19 @@ public abstract class Niveau {
 		}
 	}
 	
-	public void addMobAffiche(Personnage mob) {
+	public void addMobAffiche(BonhommeDeNeige mob) {
 		this.mobAffiche.add(mob);
 	}
 	
-	public ArrayList<Personnage> getMobAffiche() {
+	public ArrayList<BonhommeDeNeige> getMobAffiche() {
 		return this.mobAffiche;
+	}
+	
+	/**
+	 * Retourne le tableau de génération de notre map
+	 */
+	public int[][] getGenerationMap() {
+		return this.generationTab;
 	}
 	
 	/**
@@ -120,11 +153,27 @@ public abstract class Niveau {
 	public Label getChronometre() {
 		return this.chronometre;
 	}
-	public ImageView getLutin() {
-		return this.lutin;
-	}
 	
-	public ImageView getBonhommeNeige() {
-		return this.bonhommeNeige;
+	public ImageView getSkin() {
+		FileManager fileManager = new FileManager();
+		ImageView skinLutin = new ImageView();
+		HashMap<String, Integer> read = (HashMap<String, Integer>) fileManager.readFile("skin");
+		for(Map.Entry<String, Integer> entry : read.entrySet()) {
+		    Integer skin = entry.getValue();
+		    switch(skin) {
+		    case 0 : 
+		    	skinLutin = new ImageView(new Image("lutinBleu.png"));
+		    	break;
+		    case 1 : 
+		    	skinLutin = new ImageView(new Image("lutinRouge.png"));
+		    	break;
+		    case 2 : 
+		    	skinLutin = new ImageView(new Image("lutinVert.png"));
+		    	break;
+		    default : 
+		    	skinLutin = new ImageView(new Image("lutinVert.png"));
+		    }
+		
+		}return skinLutin;
 	}
 }

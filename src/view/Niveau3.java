@@ -27,7 +27,7 @@ public class Niveau3 extends Niveau {
 	 * 0 = bloc de CIEL
 	 * 1 = bloc de SOL
 	 */
-	private int[][] generationTab = 
+	private static final int[][] generationTab = 
 		{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 			{0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
@@ -36,17 +36,15 @@ public class Niveau3 extends Niveau {
 			{0,0,0,0,0,0,0,0,4,0,0,1,0,0,0,0,1,0,3,0,0,0,0,0,0,0,0,2},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,3,0,0,0,0,6,0,0,0,0,0,2},
-			{1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,5,0,0,0,1,0,2},
+			{1,0,0,0,0,0,0,1,0,20,0,1,0,0,0,0,0,0,0,0,0,5,0,0,0,1,0,2},
 			{1,1,1,1,1,1,1,2,1,1,1,2,1,0,0,0,0,0,0,0,0,5,0,1,0,0,0,2},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},};
 
-	private ImageView lutin = new ImageView(new Image("lutin4.png"));
-	private ImageView bonhommeNeige = new ImageView(new Image("mob1.png"));
 	private Group root;
 
 	public Niveau3(Group root) {
-		super(root);
+		super(root, generationTab);
 		this.root=root;
 		this.generateLevel(this.generationTab);
 		this.addEntities();
@@ -61,18 +59,10 @@ public class Niveau3 extends Niveau {
 
 	@Override
 	public void addEntities() {
-		root.getChildren().add(this.lutin);
-		root.getChildren().add(this.bonhommeNeige);
+		root.getChildren().add(this.getLutin());
 	}
-	
-	public ImageView getLutin() {
-		return this.lutin;
-	}
-	
-	public ImageView getBonhommeNeige() {
-		return this.bonhommeNeige;
-	}
-	public void fini() {
+
+	public static void fini() {
 		FileManager fileManager = new FileManager();
 		HashMap<String, DonneesNiveau> recup = (HashMap<String, DonneesNiveau>)fileManager.readFile("donnees");
 		DonneesNiveau d1 = recup.get("niveau3");

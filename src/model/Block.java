@@ -10,7 +10,7 @@ public class Block {
 	private boolean hardBlock;
 	
 	public Block(String blockName, boolean hardBlock) {
-		this.blockName = blockName;
+		this.blockName=blockName;
 		this.block = new ImageView(blockName);
 		blockXSize=(int)block.getLayoutBounds().getMaxX();
 		this.hardBlock=hardBlock;
