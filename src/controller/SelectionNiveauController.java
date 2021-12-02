@@ -59,6 +59,9 @@ public class SelectionNiveauController {
 						orge.orgeAnimation();
 					}
 					break;
+				case ESCAPE:
+					application.Main.setGameState(GameState.MENU);
+					break;
 				}
 			}
 		});

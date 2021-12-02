@@ -9,34 +9,42 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import model.Block;
 import model.BonhommeDeNeige;
+import model.Lutin;
+import model.PereNoel;
 import model.Personnage;
 import model.SolidBlock;
 import model.TransparentBlock;
+import model.Vie;
 
 public abstract class Niveau {
 	
-	private Label chronometre = new Label("00.00.00");
+	private Label chronometre;
 	private Group root;
 	private ArrayList<Block> colisionBlocks;
 	private ArrayList<Block> generatedMap;
 	private ArrayList<BonhommeDeNeige> mobAffiche;
+	private ArrayList<PereNoel> bossAffiche;
 	private double coordX;
 	private double coordY;
 	private int[][] generationTab;
-	private ImageView lutin;
+	protected Vie vie;
+	
 
 	public Niveau(Group root, int[][] generationTab) {
 		root.getChildren().clear();
-		this.lutin = this.getSkin();
 		this.generationTab = generationTab;
+		this.chronometre = new Label("00.00.00");
 		this.root=root;
 		this.generatedMap = new ArrayList<Block>();
 		this.colisionBlocks = new ArrayList<Block>();
 		this.mobAffiche = new ArrayList<BonhommeDeNeige>();
+		this.bossAffiche = new ArrayList<PereNoel>();
 		this.coordX=0;
 		this.coordY=0;
+		
 	}
 	
 	public abstract void addEntities();
@@ -55,8 +63,13 @@ public abstract class Niveau {
 				newBlock.getBlock().setY(this.coordY);
 				if(isMobBlock(generationTab[i][j])) {
 					BonhommeDeNeige mob = new BonhommeDeNeige(new ImageView(new Image("mob1.png")), this.coordX, this.coordY, this);
-					root.getChildren().addAll(mob.getPersonnage());
+					root.getChildren().addAll(mob.getImage());
 					this.mobAffiche.add(mob);
+				}
+				if(isBossBlock(generationTab[i][j])) {
+					PereNoel boss = new PereNoel(new ImageView(new Image("perenoel.png")), this.coordX, this.coordY, this);
+					root.getChildren().addAll(boss.getImage());
+					this.bossAffiche.add(boss);
 				}
 				this.coordX+=64;
 			}
@@ -73,7 +86,22 @@ public abstract class Niveau {
 		}
 		return false;
 	}
+	
+	public boolean isBossBlock(int i) {
+		if(i==19) {
+			return true;
+		}
+		return false;
+	}
 
+	public void addBossAffiche(PereNoel boss) {
+		this.bossAffiche.add(boss);
+	}
+	
+	public ArrayList<PereNoel> getBossAffiche() {
+		return this.bossAffiche;
+	}
+	
 	/**
 	 * Fonction retournant le nom de l'image à placer sur notre vue, en fonction du chiffre qui a été défini sur la variable "generationTab"
 	 * @param chiffre un chiffre qui a été défini sur la variable "generationTab"
@@ -104,9 +132,11 @@ public abstract class Niveau {
 		}
 	}
 	
-	public ImageView getLutin() {
-		return this.lutin;
+	public Vie getVie() {
+		return this.vie;
 	}
+	
+	
 	
 	/**
 	 * Fonction permettant d'ajouter les blocks de type "sol" à notre liste de blocks de sol
@@ -154,7 +184,7 @@ public abstract class Niveau {
 		return this.chronometre;
 	}
 	
-	public ImageView getSkin() {
+	public Image getSkin() {
 		FileManager fileManager = new FileManager();
 		ImageView skinLutin = new ImageView();
 		HashMap<String, Integer> read = (HashMap<String, Integer>) fileManager.readFile("skin");
@@ -162,18 +192,16 @@ public abstract class Niveau {
 		    Integer skin = entry.getValue();
 		    switch(skin) {
 		    case 0 : 
-		    	skinLutin = new ImageView(new Image("lutinBleu.png"));
-		    	break;
+		    	return new Image("lutinBleu.png");
 		    case 1 : 
-		    	skinLutin = new ImageView(new Image("lutinRouge.png"));
-		    	break;
+		    	return new Image("lutinRouge.png");
 		    case 2 : 
-		    	skinLutin = new ImageView(new Image("lutinVert.png"));
-		    	break;
+		    	return new Image("lutinVert.png");
 		    default : 
-		    	skinLutin = new ImageView(new Image("lutinVert.png"));
+		    	return new Image("lutinVert.png");
 		    }
 		
-		}return skinLutin;
+		}
+		return new Image("lutinVert.png");
 	}
 }

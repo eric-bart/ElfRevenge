@@ -13,13 +13,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import model.Block;
 import model.DonneesNiveau;
+import model.Lutin;
 import model.SolidBlock;
 import model.TransparentBlock;
+import model.Vie;
 
 public class Niveau1 extends Niveau {
 
+	private Lutin lutin;
+	
 	/**
 	 * Tableau représentant la map qui va être générée
 	 * 0 = bloc de CIEL
@@ -48,15 +53,24 @@ public class Niveau1 extends Niveau {
 
 	public Niveau1(Group root) {
 		super(root, generationTab);
+		this.lutin = new Lutin(new ImageView(this.getSkin()), 0, 0, this);
+		this.vie = new Vie(lutin.getVie(), new Text(""+lutin.getVie()));
+		this.vie.setVie(2);
+		this.vie.getLabelVie();
 		this.root=root;
 		this.generateLevel(generationTab);
 		this.addEntities();
 	}
 	
-
+	public Lutin getLutin() {
+		return this.lutin;
+	}
+	
+	
 	@Override
 	public void addEntities() {
-		root.getChildren().add(this.getLutin());
+		root.getChildren().add(this.lutin.getImage());
+		root.getChildren().add(this.vie.getLabelVie());
 	}
 	
 	public static void fini() {

@@ -102,6 +102,7 @@ public class Main extends Application {
 			System.out.println("Lancement du menu");
 			MenuController menu = new MenuController(root, scene);
 			menu.menu();
+			Music();
 			fenetre.setHeight(720);
 			break;
 		case PAUSE:

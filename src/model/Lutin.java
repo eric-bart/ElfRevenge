@@ -13,6 +13,7 @@ import view.Niveau1;
 
 public class Lutin extends Personnage {
 
+	private static int vie = 2;
 	private static double VITESSESAUT = 0.01d;
 	private static double VITESSE_DEPLACEMENT = 5;
 	private double vitesseY = 0;
@@ -21,6 +22,7 @@ public class Lutin extends Personnage {
 	private Niveau niveau;
 	private boolean seDeplace;
 	private boolean rebondi;
+	private boolean touche;
 
 	/**
 	 * Construit un lutin détenant une certaine coordonnée et un ImageView qui correspond à sa représentation sur la vue.
@@ -30,7 +32,8 @@ public class Lutin extends Personnage {
 	 */
 	public Lutin(ImageView imagePersonnage, double coordScreenX, double coordScreenY, Niveau niveau) {
 		super(imagePersonnage, coordScreenX, coordScreenY, niveau);
-		this.lutin = this.getPersonnage();
+		this.touche=false;
+		this.lutin = this.getImage();
 		this.niveau = niveau;
 		this.rebondi=false;
 		this.setDeplacementDroite(false);
@@ -48,14 +51,12 @@ public class Lutin extends Personnage {
 			if(this.blockDurDirectDroiteLutin()==null) {
 
 				if(!this.isDansLeCiel()) {
-					System.out.println("Bah ici alors");
 					if(this.lutin.getX()+VITESSE_DEPLACEMENT>=niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMaxX()) {
 						this.lutin.setX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMinX());
 						this.setCoordMapMinX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMinX());
 						this.setCoordMapMaxX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMinX()+(this.lutin.getLayoutBounds().getWidth()));
 						this.setCoordMapCentreX(niveau.getGeneration().get(niveau.getGeneration().size()-1).getBlock().getLayoutBounds().getMinX() +(this.lutin.getLayoutBounds().getWidth()/2));
 					} else {
-						System.out.println("Je suis sensé faire ça");
 						this.lutin.setX(this.lutin.getX() + VITESSE_DEPLACEMENT);
 						this.setCoordMapMaxX(this.getCoordMapMaxX() + VITESSE_DEPLACEMENT);
 						this.setCoordMapCentreX(this.getCoordMapCentreX() + VITESSE_DEPLACEMENT);
@@ -71,7 +72,6 @@ public class Lutin extends Personnage {
 							this.setCoordMapCentreX(this.getCoordMapCentreX() + VITESSE_DEPLACEMENT);
 							this.setCoordMapMinX(this.getCoordMapMinX() + VITESSE_DEPLACEMENT);
 						}
-						System.out.println("Je suis ici khey");
 					}
 				}
 			}
@@ -176,15 +176,15 @@ public class Lutin extends Personnage {
 	}
 	
 	public boolean isColisionMob(Personnage mob) {
-		double maxXLutin = this.getPersonnage().getLayoutBounds().getMaxX();
-		double minXLutin = this.getPersonnage().getLayoutBounds().getMinX();
-		double centerYLutin = this.getPersonnage().getLayoutBounds().getCenterY();
-		double maxYLutin = this.getPersonnage().getLayoutBounds().getMaxY();
-		double minYLutin = this.getPersonnage().getLayoutBounds().getMinY();
-		if((maxXLutin>=mob.getPersonnage().getLayoutBounds().getMinX() && maxXLutin<=mob.getPersonnage().getLayoutBounds().getMinX()+10
-				&& (centerYLutin>=mob.getPersonnage().getLayoutBounds().getMinY() && centerYLutin<=mob.getPersonnage().getLayoutBounds().getMaxY())
-				) || (minXLutin<=mob.getPersonnage().getLayoutBounds().getMaxX() && minXLutin>=mob.getPersonnage().getLayoutBounds().getMaxX()-10
-				&& (centerYLutin>=mob.getPersonnage().getLayoutBounds().getMinY() && centerYLutin<=mob.getPersonnage().getLayoutBounds().getMaxY()))) {
+		double maxXLutin = this.getImage().getLayoutBounds().getMaxX();
+		double minXLutin = this.getImage().getLayoutBounds().getMinX();
+		double centerYLutin = this.getImage().getLayoutBounds().getCenterY();
+		double maxYLutin = this.getImage().getLayoutBounds().getMaxY();
+		double minYLutin = this.getImage().getLayoutBounds().getMinY();
+		if((maxXLutin>=mob.getImage().getLayoutBounds().getMinX() && maxXLutin<=mob.getImage().getLayoutBounds().getMinX()+10
+				&& (centerYLutin>=mob.getImage().getLayoutBounds().getMinY() && centerYLutin<=mob.getImage().getLayoutBounds().getMaxY())
+				) || (minXLutin<=mob.getImage().getLayoutBounds().getMaxX() && minXLutin>=mob.getImage().getLayoutBounds().getMaxX()-10
+				&& (centerYLutin>=mob.getImage().getLayoutBounds().getMinY() && centerYLutin<=mob.getImage().getLayoutBounds().getMaxY()))) {
 			
 			return true;
 		}
@@ -209,5 +209,25 @@ public class Lutin extends Personnage {
 		} else {
 			return false;
 		}
+	}
+
+	public void setTouche(boolean touche) {
+		this.touche=touche;
+	}
+	
+	public boolean isTouche() {
+		return this.touche;
+	}
+
+	public void enleverVie() {
+		vie--;
+	}
+	
+	public int getVie() {
+		return vie;
+	}
+	
+	public void setVie(int vie) {
+		vie=vie;
 	}
 }

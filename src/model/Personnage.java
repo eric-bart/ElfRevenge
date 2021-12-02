@@ -54,7 +54,7 @@ public abstract class Personnage {
 	}
 	
 	public Block blockDurDirectDessusLutin(int distanceHaut) {
-		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+		if(this.getImage().getLayoutBounds().getMinY()>0) {
 			if((((int) this.getCoordMapMaxX()/Block.blockXSize 
 				+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() && ((int) this.getCoordMapMaxX()/Block.blockXSize 
@@ -99,7 +99,7 @@ public abstract class Personnage {
 		//SI LE MAXX A EN DESSOUS DE LUI UN BLOC NON DUR
 		//REGARDER LE MINX, SI LE MINY A EN DESSOUS DE LUI UN BLOC NON DUR
 		//RENVOYER NULL
-		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+		if(this.getImage().getLayoutBounds().getMinY()>0) {
 			if(((int) this.getCoordMapMaxX()/Block.blockXSize 
 				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
@@ -131,7 +131,7 @@ public abstract class Personnage {
 	}
 	
 	public Block blockDurDirectDroiteLutin() {
-		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+		if(this.getImage().getLayoutBounds().getMinY()>0) {
 			if((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
 				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
@@ -165,7 +165,7 @@ public abstract class Personnage {
 	}
 	
 	public Block blockDurDirectGaucheLutin() {
-		if(this.getPersonnage().getLayoutBounds().getMinY()>0) {
+		if(this.getImage().getLayoutBounds().getMinY()>0) {
 			if((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
 				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
 				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
@@ -243,7 +243,7 @@ public abstract class Personnage {
 	 * Retourne l'image du lutin sur la vue
 	 * @return ImageView l'image du lutin
 	 */
-	public ImageView getPersonnage() {
+	public ImageView getImage() {
 		return this.imagePersonnage;
 	}
 

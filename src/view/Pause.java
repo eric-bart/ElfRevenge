@@ -20,10 +20,10 @@ public class Pause{
 		this.pauseBackground= new ImageView(backgroundName);
 		this.orge = new ImageView(orgeName);
 		root.getChildren().addAll(this.pauseBackground,this.orge);
-		this.pauseBackground.setX((Screen.getPrimary().getBounds().getMaxX()-this.pauseBackground.getLayoutBounds().getMaxX())/2);
-		this.pauseBackground.setY((root.getLayoutBounds().getMaxY()-this.pauseBackground.getLayoutBounds().getMaxY())/2);
-		this.orge.setX((Screen.getPrimary().getBounds().getMaxX()-this.orge.getLayoutBounds().getMaxX())/2);
-		this.orge.setY((root.getLayoutBounds().getMaxY()-this.orge.getLayoutBounds().getMaxY())/2);
+		this.pauseBackground.setX((application.Main.fenetre.getWidth()-this.pauseBackground.getLayoutBounds().getMaxX())/2);
+		this.pauseBackground.setY((application.Main.fenetre.getHeight()-this.pauseBackground.getLayoutBounds().getMaxY())/2);
+		/**this.orge.setX((application.Main.fenetre.getWidth()-this.orge.getLayoutBounds().getMaxX())/2);
+		this.orge.setY((application.Main.fenetre.getHeight()-this.orge.getLayoutBounds().getMaxY())/2);**/
 	}
 	
 	public ImageView getPauseBackground() {

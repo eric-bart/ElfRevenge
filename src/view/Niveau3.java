@@ -13,41 +13,61 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import model.Block;
 import model.DonneesNiveau;
+import model.Lutin;
 import model.SolidBlock;
 import model.TransparentBlock;
+import model.Vie;
 import controller.FileManager;
 
 
 public class Niveau3 extends Niveau {
 
+	
+	private Lutin lutin;
+	
 	/**
 	 * Tableau représentant la map qui va être générée
 	 * 0 = bloc de CIEL
 	 * 1 = bloc de SOL
 	 */
 	private static final int[][] generationTab = 
-		{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,2},
-			{0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,4,0,0,1,0,0,0,0,1,0,3,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,3,0,0,0,0,6,0,0,0,0,0,2},
-			{1,0,0,0,0,0,0,1,0,20,0,1,0,0,0,0,0,0,0,0,0,5,0,0,0,1,0,2},
-			{1,1,1,1,1,1,1,2,1,1,1,2,1,0,0,0,0,0,0,0,0,5,0,1,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},};
+		{{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,1,0,0,0,20,2,0,0,0,0,0,0,0,0,0,2},
+				{2,1,1,1,2,1,1,1,1,2,1,1,1,1,1,1,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,6,0,0,0,0,1,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,1,5,0,0,19,0,0,20,1,0,0,0,0,0,0,2},
+				{2,0,0,0,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+				{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2}};
 
 	private Group root;
 
 	public Niveau3(Group root) {
 		super(root, generationTab);
+		this.lutin = new Lutin(new ImageView(this.getSkin()), 0, 0, this);
+		this.vie = new Vie(lutin.getVie(), new Text(""+lutin.getVie()));
+		this.vie.setVie(2);
+		this.vie.getLabelVie();
 		this.root=root;
 		this.generateLevel(this.generationTab);
 		this.addEntities();
+	}
+	
+	
+	public Lutin getLutin() {
+		return this.lutin;
 	}
 	
 	/**
@@ -59,7 +79,7 @@ public class Niveau3 extends Niveau {
 
 	@Override
 	public void addEntities() {
-		root.getChildren().add(this.getLutin());
+		root.getChildren().add(this.lutin.getImage());
 	}
 
 	public static void fini() {

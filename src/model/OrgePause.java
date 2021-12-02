@@ -28,13 +28,13 @@ public class OrgePause {
 		switch(selectedOpt) {
 		case 0:
 			//Le sucre d'orge pointe sur "jouer"
-			this.orge.setY(270);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-220);
+			this.orge.setY(380);
+			this.orge.setX((application.Main.fenetre.getWidth()/2)-230);
 			break;
 		case 1: 
 			//Le sucre d'orge pointe sur "customisation"
-			this.orge.setY(400);
-			this.orge.setX((Screen.getPrimary().getBounds().getMaxX()/2)-220);
+			this.orge.setY(510);
+			this.orge.setX((application.Main.fenetre.getWidth()/2)-230);
 			break;
 		}
 	}

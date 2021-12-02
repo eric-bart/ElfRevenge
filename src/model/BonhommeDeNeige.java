@@ -75,13 +75,13 @@ public class BonhommeDeNeige extends Personnage {
 	}
 	
 	public boolean isMort(Lutin lutin) {
-		double maxXLutin = lutin.getPersonnage().getLayoutBounds().getMaxX();
-		double minXLutin = lutin.getPersonnage().getLayoutBounds().getMinX();
-		double maxYLutin = lutin.getPersonnage().getLayoutBounds().getMaxY();
-		double minYLutin = lutin.getPersonnage().getLayoutBounds().getMinY();
-		if(maxYLutin>=this.getPersonnage().getLayoutBounds().getMinY() && maxYLutin<=this.getPersonnage().getLayoutBounds().getMinY()+10
-				&& (minXLutin>this.getPersonnage().getLayoutBounds().getMinX() && minXLutin<this.getPersonnage().getLayoutBounds().getMaxX() ||
-				maxXLutin<this.getPersonnage().getLayoutBounds().getMaxX() && maxXLutin>this.getPersonnage().getLayoutBounds().getMinX())) {
+		double maxXLutin = lutin.getImage().getLayoutBounds().getMaxX();
+		double minXLutin = lutin.getImage().getLayoutBounds().getMinX();
+		double maxYLutin = lutin.getImage().getLayoutBounds().getMaxY();
+		double minYLutin = lutin.getImage().getLayoutBounds().getMinY();
+		if(maxYLutin>=this.getImage().getLayoutBounds().getMinY() && maxYLutin<=this.getImage().getLayoutBounds().getMinY()+10
+				&& (minXLutin>this.getImage().getLayoutBounds().getMinX() && minXLutin<this.getImage().getLayoutBounds().getMaxX() ||
+				maxXLutin<this.getImage().getLayoutBounds().getMaxX() && maxXLutin>this.getImage().getLayoutBounds().getMinX())) {
 			return true;
 		}
 		return false;
