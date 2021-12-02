@@ -25,7 +25,7 @@ public class SelectionNiveauController {
     }
 
 	public void selectionNiveau() {
-		//Sélection du niveau pas encore faite -> Je redirige vers le niveau1
+		//Sï¿½lection du niveau pas encore faite -> Je redirige vers le niveau1
 		SelectNiveau select = new SelectNiveau(this.root);
 		OrgeSelectNiveau orge = new OrgeSelectNiveau(select.getOrge());
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {

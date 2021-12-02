@@ -32,10 +32,37 @@ public class IntroController {
 	public void intro() {
 		Intro intro = new Intro(this.root);
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-		public void handle(KeyEvent keyEvent) {
+			public void handle(KeyEvent keyEvent) {
+				switch (keyEvent.getCode()) {
+				case ESCAPE:
 					application.Main.setGameState(GameState.MENU);
+					break;
+				case ENTER:
+					application.Main.setGameState(GameState.MENU);
+					break;
+				case SPACE:
+					application.Main.setGameState(GameState.MENU);
+					break;
+				case LEFT: {
+					application.Main.setGameState(GameState.MENU);
+					break;
+				}
+				case RIGHT: {
+					application.Main.setGameState(GameState.MENU);
+					break;
+				}
+				case UP: {
+					application.Main.setGameState(GameState.MENU);
+					break;
+				}
+				case DOWN: {
+					application.Main.setGameState(GameState.MENU);
+					break;
+				}
+				default: 
+					break;
+				}
 			}
-	});
+		});
 	}
-	
 }
