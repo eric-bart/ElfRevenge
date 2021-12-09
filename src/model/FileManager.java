@@ -12,7 +12,12 @@ public class FileManager {
 		File f = new File("src\\data\\"+nom);
 		return(f.exists() && !f.isDirectory());
 	}
-	
+	/**
+	 * Fonction permettant d'écrire dans le fichier choisi et en rentrant les données souhaité.
+	 * @param nom
+	 * @param data
+	 * @return
+	 */
 	public boolean writeToFile(String nom, HashMap<String, DonneesNiveau> data) {
 		try{
 				FileOutputStream f = new FileOutputStream("src\\data\\"+nom);
@@ -25,6 +30,12 @@ public class FileManager {
 	      return false;
 	    }
 	}
+	/**
+	 * Permet d'écrire dans le fichier choisis pour sélectionner le skin voulu.
+	 * @param nom
+	 * @param data
+	 * @return
+	 */
 	public boolean setSkin(String nom, HashMap<String, Integer> data) {
 		try{
 				FileOutputStream f = new FileOutputStream("src\\data\\"+nom);
@@ -37,6 +48,11 @@ public class FileManager {
 	      return false;
 	    }
 	}
+	/**
+	 * Permet de lire dans le fichier choisit pour retrouver les données que l'on souhaite.
+	 * @param nom
+	 * @return
+	 */
 	public Object readFile(String nom) {
 			try {
 				 

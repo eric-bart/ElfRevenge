@@ -12,15 +12,30 @@ public class DonneesNiveau implements Serializable {
 		this.fini = fini;
 		this.scoreMax = scoreMax;
 	}
+	/**
+	 * Retourne un boolean si le niveau a été fini ou non.
+	 * @return boolean
+	 */
 	public boolean isFini() {
 		return fini;
 	}
+	/**
+	 * Permet de set le niveau à true.
+	 */
 	public void setFini(boolean fini) {
 		this.fini = fini;
 	}
+	/**
+	 * Permet de retrouver le scoreMax d'un niveau.
+	 * @return Int ScoreMax 
+	 */
 	public int getScoreMax() {
 		return scoreMax;
 	}
+	/**
+	 * Permet de définir le scoreMax d'un niveau.
+	 * @return Int ScoreMax 
+	 */
 	public void setScoreMax(int scoreMax) {
 		this.scoreMax = scoreMax;
 	}

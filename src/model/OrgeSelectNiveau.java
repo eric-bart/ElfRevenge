@@ -10,7 +10,7 @@ public class OrgeSelectNiveau {
 	private int selectedNiveau;
 
 	/**
-	 * Constructeur du sucre d'orge, ce qui correspond au sï¿½lecteur sur le menu du jeu
+	 * Constructeur du sucre d'orge, ce qui correspond au sélecteur sur le menu du jeu
 	 * @param orge
 	 */
 	public OrgeSelectNiveau(ImageView orge) {
@@ -20,8 +20,8 @@ public class OrgeSelectNiveau {
 	}
 
 	/**
-	 * Cette fonction permet de dï¿½placer l'orge en fonction
-	 * de l'option du menu qui est en cours de sï¿½lection
+	 * Cette fonction permet de déplacer l'orge en fonction
+	 * de l'option du menu qui est en cours de sélection
 	 */
 	public void orgeAnimation() {
 		int selectedNiveau = this.selectedNiveau;
@@ -57,16 +57,16 @@ public class OrgeSelectNiveau {
 	}
 
 	/**
-	 * Retourne l'itï¿½ration du tableau niveaux
-	 * @return l'itï¿½ration (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
+	 * Retourne l'itération du tableau niveaux
+	 * @return l'itération (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
 	 */
 	public int getSelectedNiveau() {
 		return this.selectedNiveau;
 	}
 
 	/**
-	 * Permet de mettre ï¿½ jour l'itï¿½ration du tableau "niveaux" sur laquelle l'utilisateur pointe
-	 * @param opt l'itï¿½ration (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
+	 * Permet de mettre à jour l'itération du tableau "niveaux" sur laquelle l'utilisateur pointe
+	 * @param opt l'itération (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
 	 */
 	public void setSelectedNiveau(int niveau) {
 		this.selectedNiveau = niveau;
