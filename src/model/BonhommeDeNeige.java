@@ -1,71 +1,55 @@
 package model;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Screen;
 import view.Niveau;
-import view.Niveau1;
 
+/**
+ * Classe du Personnage BonhommeDeNeige. C'est dans cette classe que l'on gère les méthodes propres à notre
+ * Personnage BonhommeDeNeige. 
+ */
 public class BonhommeDeNeige extends Personnage {
 
-	private boolean deplacementGauche;
-	private boolean deplacementDroite;
-	private boolean colisionDroite;
-	private boolean colisionGauche;
-	private boolean saut;
-	private int timerSaut;
-	private static double VITESSESAUT = 0.01d;
 	private static double VITESSE_DEPLACEMENT =2;
 	private double vitesseY = 0;
 	private static double G = 0.02d;
-	private ImageView bonhommeNeige;
-	private double coordMapMaxX;
-	private double coordMapCentreX;
-	private double coordMapMinX;
-	private Niveau niveau;
+	private ImageView imageBonhommeNeige;
+	private boolean colisionADroite;
+	private boolean colisionAGauche;
 
-	private boolean colisionADroite=false;
-	private boolean colisionAGauche=false;
-	private boolean doitReculer=false;
-
-
-	public BonhommeDeNeige(ImageView bonhommeNeige, double coordScreenX, double coordScreenY, Niveau niveau) {
-		super(bonhommeNeige, coordScreenX, coordScreenY, niveau);
-		this.niveau = niveau;
-		this.bonhommeNeige= bonhommeNeige;
-		this.bonhommeNeige.setX(coordScreenX);
-		this.bonhommeNeige.setY(coordScreenY);
-		this.coordMapMaxX = coordScreenX+this.bonhommeNeige.getLayoutBounds().getWidth();
-		this.coordMapCentreX = coordScreenX+(this.bonhommeNeige.getLayoutBounds().getWidth()/2);
-		this.coordMapMinX = coordScreenX;
-		this.deplacementDroite=false;
-		this.deplacementGauche=false;
-		this.colisionDroite=false;
-		this.colisionGauche=false;
-		this.saut=false;
+	public BonhommeDeNeige(double coordScreenX, double coordScreenY) {
+		super(new ImageView("mob1.png"), coordScreenX, coordScreenY);
+		this.imageBonhommeNeige = this.getImage();
+		this.imageBonhommeNeige.setX(coordScreenX);
+		this.imageBonhommeNeige.setY(coordScreenY);
+		this.colisionADroite=false;
+		this.colisionAGauche=false;
 	}
 
-	private ImageView getBonhommeNeige() {
-		return this.bonhommeNeige;
+	/**
+	 * Fonction faisant sauter le bonhomme de neige.
+	 */
+	@Override
+	public void sauter(Niveau niveau) {
+		double saut = 150d;
+		if (!this.isDansLeCiel(niveau)) {
+			this.imageBonhommeNeige.setY(this.imageBonhommeNeige.getY()-saut);
+			this.setVitesseY(1.6d);
+		}
 	}
-
+	
 	/**
 	 * Déplace le personnage sur le niveau
 	 * @param niveau Le niveau concerné
 	 */
 	@Override
-	public void seDeplace() {
-		if(!isDansLeCiel()) {
-			if(this.blockDurDirectDroiteLutin()==null && !this.colisionADroite) {
-				this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()+getVITESSE_DEPLACEMENT());
-				this.setCoordMapMaxX(this.getCoordMapMaxX() + getVITESSE_DEPLACEMENT());
-				this.setCoordMapCentreX(this.getCoordMapCentreX() + getVITESSE_DEPLACEMENT());
-				this.setCoordMapMinX(this.getCoordMapMinX() + getVITESSE_DEPLACEMENT());
-			} else if(this.blockDurDirectGaucheLutin()==null){
+	public void seDeplace(Niveau niveau) {
+		if(!isDansLeCiel(niveau)) {
+			if(this.blockDurDroite(niveau)==null && !this.colisionADroite) {
+				this.getImage().setX(this.getImage().getX()+getVitesseDeplacement());
+			} else if(this.blockDurGauche(niveau)==null){
 				this.colisionADroite = true;
-				this.getBonhommeNeige().setX(this.getBonhommeNeige().getX()-getVITESSE_DEPLACEMENT());
-				this.setCoordMapMaxX(this.getCoordMapMaxX() - getVITESSE_DEPLACEMENT());
-				this.setCoordMapCentreX(this.getCoordMapCentreX() - getVITESSE_DEPLACEMENT());
-				this.setCoordMapMinX(this.getCoordMapMinX() - getVITESSE_DEPLACEMENT());
+				this.getImage().setX(this.getImage().getX()-getVitesseDeplacement());
 			} else {
 				this.colisionAGauche=true;
 				this.colisionADroite=false;
@@ -74,11 +58,16 @@ public class BonhommeDeNeige extends Personnage {
 
 	}
 	
-	public boolean isMort(Lutin lutin) {
+	/**
+	 * Retourne un boolean informant d'un contact par le dessus du bonhomme de neige. 
+	 * Cet impact signifie que le bonhomme de neige a été tué.
+	 * @param lutin Le lutin sur le niveau
+	 * @return boolean true=Le bonhomme de neige est mort | false=Le bonhomme de neige n'est pas mort
+	 */
+	public boolean isMortColision(Lutin lutin) {
 		double maxXLutin = lutin.getImage().getLayoutBounds().getMaxX();
 		double minXLutin = lutin.getImage().getLayoutBounds().getMinX();
 		double maxYLutin = lutin.getImage().getLayoutBounds().getMaxY();
-		double minYLutin = lutin.getImage().getLayoutBounds().getMinY();
 		if(maxYLutin>=this.getImage().getLayoutBounds().getMinY() && maxYLutin<=this.getImage().getLayoutBounds().getMinY()+10
 				&& (minXLutin>this.getImage().getLayoutBounds().getMinX() && minXLutin<this.getImage().getLayoutBounds().getMaxX() ||
 				maxXLutin<this.getImage().getLayoutBounds().getMaxX() && maxXLutin>this.getImage().getLayoutBounds().getMinX())) {
@@ -87,47 +76,36 @@ public class BonhommeDeNeige extends Personnage {
 		return false;
 	}
 
-	public boolean isDansFenetre() {
-		if(this.getBonhommeNeige().getLayoutBounds().getMinX()<0-this.getBonhommeNeige().getLayoutBounds().getWidth() || this.getBonhommeNeige().getLayoutBounds().getMinX()>1280+this.getBonhommeNeige().getLayoutBounds().getWidth()) {
-			if(!niveau.getMobAffiche().contains(this.getBonhommeNeige())) {
-				niveau.addMobAffiche(this);
-			}
-			return false;
-		}
-		return true;
+	/**
+	 * Fonction retournant la vitesse de déplacement du bonhomme de neige
+	 * @return double représentant la vitesse de déplacement du bonhomme de neige
+	 */
+	public double getVitesseDeplacement() {
+		return VITESSE_DEPLACEMENT;
 	}
-
-	public double getVitesse() {
-		return getVITESSE_DEPLACEMENT();
-	}
-
-	@Override
-	public void tombe() {
-		this.bonhommeNeige.setY(this.bonhommeNeige.getY() + this.vitesseY);
+	
+	/**
+	 * Fait tomber le personnage progressivement.
+	 * Cette fonction réduit les coordonnées en Y du lutin progressivement en fonction du facteur de gravité "G".
+	 */
+	public void tombe(Niveau niveau) {
+		this.imagePersonnage.setY(this.imagePersonnage.getY() + this.vitesseY);
 		this.vitesseY=this.vitesseY + G;
 	}
-
-	@Override
-	public void sauter() {
-		if (!this.isDansLeCiel()) {
-			this.bonhommeNeige.setY(this.bonhommeNeige.getY()-150d);
-			this.setVitesseY(1.6d);
-		}
-	}
-
+	
+	/**
+	 * Fonction retournant la vitesse sur l'axe Y du bonhomme de neige
+	 * @param vitesse double étant la valeur de la vitesse
+	 */
 	public void setVitesseY(double vitesse) {
 		this.vitesseY = vitesse;
 	}
-	@Override
-	public boolean isMort() {
-		return this.bonhommeNeige.getY()>=760;
-	}
-
-	public static double getVITESSE_DEPLACEMENT() {
-		return VITESSE_DEPLACEMENT;
-	}
-
-	public static void setVITESSE_DEPLACEMENT(double vITESSE_DEPLACEMENT) {
-		VITESSE_DEPLACEMENT = vITESSE_DEPLACEMENT;
+	
+	/**
+	 * Fonction permettant d'actualiser la valeur de vitesse de déplacement du bonhomme de neige
+	 * @param vitesseDeplacement le facteur de vitesse du bonhomme de neige
+	 */
+	public static void setVitesseDeplacement(double vitesseDeplacement) {
+		VITESSE_DEPLACEMENT = vitesseDeplacement;
 	}
 }

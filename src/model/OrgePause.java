@@ -1,5 +1,6 @@
 package model;
 
+import application.Jeu;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
@@ -29,12 +30,12 @@ public class OrgePause {
 		case 0:
 			//Le sucre d'orge pointe sur "jouer"
 			this.orge.setY(380);
-			this.orge.setX((application.Main.fenetre.getWidth()/2)-230);
+			this.orge.setX((Jeu.monJeu.getGameStage().getWidth()/2)-230);
 			break;
 		case 1: 
 			//Le sucre d'orge pointe sur "customisation"
 			this.orge.setY(510);
-			this.orge.setX((application.Main.fenetre.getWidth()/2)-230);
+			this.orge.setX((Jeu.monJeu.getGameStage().getWidth()/2)-230);
 			break;
 		}
 	}

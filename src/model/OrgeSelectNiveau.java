@@ -11,6 +11,7 @@ public class OrgeSelectNiveau {
 
 	/**
 	 * Constructeur du sucre d'orge, ce qui correspond au s�lecteur sur le menu du jeu
+	 * Constructeur du sucre d'orge, ce qui correspond au s�lecteur sur le menu du jeu
 	 * @param orge
 	 */
 	public OrgeSelectNiveau(ImageView orge) {
@@ -20,6 +21,8 @@ public class OrgeSelectNiveau {
 	}
 
 	/**
+	 * Cette fonction permet de d�placer l'orge en fonction
+	 * de l'option du menu qui est en cours de s�lection
 	 * Cette fonction permet de d�placer l'orge en fonction
 	 * de l'option du menu qui est en cours de s�lection
 	 */
@@ -59,12 +62,16 @@ public class OrgeSelectNiveau {
 	/**
 	 * Retourne l'it�ration du tableau niveaux
 	 * @return l'it�ration (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
+	 * Retourne l'it�ration du tableau niveaux
+	 * @return l'it�ration (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
 	 */
 	public int getSelectedNiveau() {
 		return this.selectedNiveau;
 	}
 
 	/**
+	 * Permet de mettre � jour l'it�ration du tableau "niveaux" sur laquelle l'utilisateur pointe
+	 * @param opt l'it�ration (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
 	 * Permet de mettre � jour l'it�ration du tableau "niveaux" sur laquelle l'utilisateur pointe
 	 * @param opt l'it�ration (0 = NIVEAU1, 1 = NIVEAU2, 2 = NIVEAU3)
 	 */

@@ -2,270 +2,343 @@ package model;
 
 import javafx.scene.image.ImageView;
 import view.Niveau;
-import view.Niveau1;
 
+/**
+ * Classe abstraite mÃ¨re de nos personnage.
+ */
 public abstract class Personnage {
-	
+
 	private boolean deplacementGauche;
 	private boolean deplacementDroite;
 	private boolean saut;
 	private int timerSaut;
-	private ImageView imagePersonnage;
-	private Niveau niveau;
-	private double coordMapMaxX;
-	private double coordMapCentreX;
-	private double coordMapMinX;
 	private boolean raterri;
+	protected ImageView imagePersonnage;
 	
-	public Personnage(ImageView imagePersonnage, double coordScreenX, double coordScreenY, Niveau niveau) {
-		this.niveau = niveau;
+	
+	public Personnage(ImageView imagePersonnage, double coordScreenX, double coordScreenY) {
 		this.imagePersonnage = imagePersonnage;
 		this.imagePersonnage.setX(coordScreenX);
 		this.imagePersonnage.setY(coordScreenY);
-		this.coordMapMaxX = coordScreenX+this.imagePersonnage.getLayoutBounds().getWidth();
-		this.coordMapCentreX = coordScreenX+(this.imagePersonnage.getLayoutBounds().getWidth()/2);
-		this.coordMapMinX = coordScreenX;
 		this.deplacementDroite=false;
 		this.deplacementGauche=false;
 		this.saut=false;
 	}
-	
-	public abstract void seDeplace();
-	
-	public abstract void tombe();
-	
-	public abstract void sauter();
-	
-	public abstract boolean isMort();
-	
 
 	/**
-	 * Vérifie si le personnage est dans le vide ou pas.
-	 * Vide = Ne pas être sur un block
+	 * Fait se dÃ©placer le personnage
+	 */
+	public abstract void seDeplace(Niveau niveau);
+
+	/**
+	 * Fait sauter le personnage
+	 */
+	public abstract void sauter(Niveau niveau);
+
+	/**
+	 * Retourne un booleen selon si le le personnage est mort ou pas.
+	 * @return boolean true=Le bonhomme de neige est mort | false=Le bonhomme de neige n'est pas mort
+	 */
+	public boolean isMort() {
+		return this.imagePersonnage.getY()>=760;
+	}
+
+	/**
+	 * VÃ©rifie si le personnage est dans le vide ou pas.
+	 * Vide = Ne pas Ãªtre sur un block
 	 * @param block Le block sur lequel le lutin se trouve en X
 	 * @return boolean true=Le lutin est dans le vide ; false=Le lutin n'est pas dans le vide
 	 */
-	public boolean isDansLeCiel() {
-		if(this.blocDurDirectDessousLutin()==null) {
+	public boolean isDansLeCiel(Niveau niveau) {
+		if(this.blocDurDessousDirect(2, niveau)==null) {
 			return true;
 		} else {
-			return this.imagePersonnage.getLayoutBounds().getMaxY()<=this.blocDurDirectDessousLutin().getBlock().getLayoutBounds().getMinY();
+			return this.imagePersonnage.getLayoutBounds().getMaxY()<=this.blocDurDessous(niveau).getBlock().getLayoutBounds().getMinY();
 		}
 	}
-	
-	public Block blockDurDirectDessusLutin(int distanceHaut) {
-		if(this.getImage().getLayoutBounds().getMinY()>0) {
-			if((((int) this.getCoordMapMaxX()/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() && ((int) this.getCoordMapMaxX()/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length) >0)
-				|| (((int) this.getCoordMapMinX()/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() && (((int) this.getCoordMapMinX()/Block.blockXSize 
-								+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-								* niveau.getGenerationMap()[0].length)> 0))) {
-			if(niveau.getGeneration().get(((int) this.getCoordMapMaxX()/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				return niveau.getGeneration().get(((int) this.getCoordMapMaxX()/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
-			} else if (niveau.getGeneration().get(((int) this.getCoordMapMinX()/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				return niveau.getGeneration().get(((int) this.getCoordMapMinX()/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY() - distanceHaut)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
+
+
+	/**
+	 * Retourne le bloc au dessus du personnage ï¿½ la distance spï¿½cifiï¿½e dans les paramï¿½tres. 
+	 * S'il est dur, le block est renvoyï¿½. Sinon, null est renvoyï¿½.
+	 * @param distanceHaut distance
+	 * @return Block si dur | Null sinon
+	 */
+	public Block blockDurDessus(int distanceHaut, Niveau niveau) {
+		double minY = this.imagePersonnage.getLayoutBounds().getMinY();
+		double minX = this.imagePersonnage.getLayoutBounds().getMinX();
+		double maxX = this.imagePersonnage.getLayoutBounds().getMaxX();
+		if(minY>0) {
+			if((((int) maxX/Block.blockXSize 
+					+ (((int) minY - distanceHaut)/Block.blockXSize)
+					* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size() && ((int) maxX/Block.blockXSize 
+							+ (((int) minY - distanceHaut)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length) >0)
+					|| (((int) minX/Block.blockXSize 
+							+ (((int) minY - distanceHaut)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size() && (((int) minX/Block.blockXSize 
+									+ (((int) minY - distanceHaut)/Block.blockXSize)
+									* niveau.getMatriceNiveau()[0].length)> 0))) {
+				if(niveau.getBlocksNiveau().get(((int) maxX/Block.blockXSize 
+						+ (((int) minY - distanceHaut)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					return niveau.getBlocksNiveau().get(((int) maxX/Block.blockXSize 
+							+ (((int) minY - distanceHaut)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else if (niveau.getBlocksNiveau().get(((int) minX/Block.blockXSize 
+						+ (((int) minY - distanceHaut)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					return niveau.getBlocksNiveau().get(((int) minX/Block.blockXSize 
+							+ (((int) minY - distanceHaut)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else {
+					return null;
+				}
 			} else {
 				return null;
 			}
 		} else {
 			return null;
 		}
-		} else {
-			return null;
-		}
-		
+
 	}
-	
+
 
 	/**
-	 * Retourne le bloc situé en dessous du lutin
-	 * @param niveau
-	 * @return ImageView le bloc situé en dessous du lutin
+	 * Retourne le bloc au dessous du personnage. S'il est dur, le block est renvoyï¿½. Sinon, null est renvoyï¿½.
+	 * @return Block si dur | Null sinon
 	 */
-	public Block blocDurDirectDessousLutin() {
+	public Block blocDurDessous(Niveau niveau) {
+		double minY = this.imagePersonnage.getLayoutBounds().getMinY();
+		double maxY = this.imagePersonnage.getLayoutBounds().getMaxY();
+		double minX = this.imagePersonnage.getLayoutBounds().getMinX();
+		double maxX = this.imagePersonnage.getLayoutBounds().getMaxX();
 		//SI LE MAXX A EN DESSOUS DE LUI UN BLOC NON DUR
 		//REGARDER LE MINX, SI LE MINY A EN DESSOUS DE LUI UN BLOC NON DUR
 		//RENVOYER NULL
-		if(this.getImage().getLayoutBounds().getMinY()>0) {
-			if(((int) this.getCoordMapMaxX()/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
-				|| ((int) this.getCoordMapMinX()/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			if(niveau.getGeneration().get(((int) this.getCoordMapMaxX()/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				return niveau.getGeneration().get(((int) this.getCoordMapMaxX()/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
-			} else if (niveau.getGeneration().get(((int) this.getCoordMapMinX()/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				return niveau.getGeneration().get(((int) this.getCoordMapMinX()/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY() + 10)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
+		if(minY>0) {
+			if(((int) maxX/Block.blockXSize 
+					+ (((int) maxY + 10)/Block.blockXSize)
+					* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size() 
+					|| ((int) minX/Block.blockXSize 
+							+ (((int) maxY + 10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size()) {
+				if(niveau.getBlocksNiveau().get(((int) maxX/Block.blockXSize 
+						+ (((int) maxY + 10)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					return niveau.getBlocksNiveau().get(((int) maxX/Block.blockXSize 
+							+ (((int) maxY + 10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else if (niveau.getBlocksNiveau().get(((int) minX/Block.blockXSize 
+						+ (((int) maxY + 10)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					return niveau.getBlocksNiveau().get(((int) minX/Block.blockXSize 
+							+ (((int) maxY + 10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else {
+					return null;
+				}
 			} else {
 				return null;
 			}
 		} else {
 			return null;
 		}
-		} else {
-			return null;
-		}
-		
+
 	}
-	
-	public Block blockDurDirectDroiteLutin() {
-		if(this.getImage().getLayoutBounds().getMinY()>0) {
-			if((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
-				|| (((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY()-10)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			if(niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				System.out.println("Y a bien un bloc");
-				return niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
-			} else if (niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				System.out.println("y a bien ce bloc");
-				return niveau.getGeneration().get((((int) this.getCoordMapMaxX()+2)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
+
+
+	/**
+	 * Retourne le bloc Ã  la droite du personnage. S'il est dur, le block est renvoyÃ©. Sinon, null est renvoyÃ©.
+	 * @return Block si dur | Null sinon
+	 */
+	public Block blockDurDroite(Niveau niveau) {
+		double minY = this.imagePersonnage.getLayoutBounds().getMinY();
+		double maxY = this.imagePersonnage.getLayoutBounds().getMaxY();
+		double maxX = this.imagePersonnage.getLayoutBounds().getMaxX();
+		if(minY>0) {
+			if((((int) maxX +2)/Block.blockXSize 
+					+ (((int) maxY-10)/Block.blockXSize)
+					* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size() 
+					|| (((int) maxX+2)/Block.blockXSize 
+							+ (((int) minY -10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size()) {
+				if(niveau.getBlocksNiveau().get((((int) maxX+2)/Block.blockXSize 
+						+ (((int) maxY -10)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					System.out.println("Y a bien un bloc");
+					return niveau.getBlocksNiveau().get((((int) maxX +2)/Block.blockXSize 
+							+ (((int) maxY-10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else if (niveau.getBlocksNiveau().get((((int) maxX +2)/Block.blockXSize 
+						+ (((int) minY)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					System.out.println("y a bien ce bloc");
+					return niveau.getBlocksNiveau().get((((int) maxX +2)/Block.blockXSize 
+							+ (((int) minY)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else {
+					return null;
+				}
 			} else {
 				return null;
 			}
 		} else {
 			return null;
 		}
-		} else {
-			return null;
-		}
-		
 	}
-	
-	public Block blockDurDirectGaucheLutin() {
-		if(this.getImage().getLayoutBounds().getMinY()>0) {
-			if((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
-				+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
-				* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size() 
-				|| (((int) this.getCoordMapMinX()-2)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY()-10)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length) <= niveau.getGeneration().size()) {
-			if(niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				System.out.println("Y a bien un bloc");
-				return niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMaxY()-10)/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
-			} else if (niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
-					+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
-					* niveau.getGenerationMap()[0].length)).isHardBlock()) {
-				System.out.println("y a bien ce bloc");
-				return niveau.getGeneration().get((((int) this.getCoordMapMinX()-2)/Block.blockXSize 
-						+ (((int) this.imagePersonnage.getLayoutBounds().getMinY())/Block.blockXSize)
-						* niveau.getGenerationMap()[0].length));
+
+
+	/**
+	 * Retourne le bloc au dessous du personnage. S'il est dur, le block est renvoyÃ©. Sinon, null est renvoyÃ©.
+	 * @return Block si dur | Null sinon
+	 */
+	public Block blocDurDessousDirect(int precision, Niveau niveau) {
+		double minY = this.imagePersonnage.getLayoutBounds().getMinY();
+		double maxY = this.imagePersonnage.getLayoutBounds().getMaxY();
+		double minX = this.imagePersonnage.getLayoutBounds().getMinX();
+		double maxX = this.imagePersonnage.getLayoutBounds().getMaxX();
+		//SI LE MAXX A EN DESSOUS DE LUI UN BLOC NON DUR
+		//REGARDER LE MINX, SI LE MINY A EN DESSOUS DE LUI UN BLOC NON DUR
+		//RENVOYER NULL
+		if(minY>0) {
+			if(((int) maxX/Block.blockXSize 
+					+ (((int) maxY + 10)/Block.blockXSize)
+					* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size() 
+					|| ((int) minX/Block.blockXSize 
+							+ (((int) maxY + 10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size()) {
+				if(niveau.getBlocksNiveau().get((((int) maxX-precision)/Block.blockXSize 
+						+ (((int) maxY + 10)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					return niveau.getBlocksNiveau().get((((int) maxX-precision)/Block.blockXSize 
+							+ (((int) maxY + 10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else if (niveau.getBlocksNiveau().get((((int) minX+precision)/Block.blockXSize 
+						+ (((int) maxY + 10)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					return niveau.getBlocksNiveau().get((((int) minX-precision)/Block.blockXSize 
+							+ (((int) maxY + 10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else {
+					return null;
+				}
 			} else {
 				return null;
 			}
 		} else {
 			return null;
 		}
+
+	}
+
+	/**
+	 * Retourne le bloc Ã  la gauche du personnage. S'il est dur, le block est renvoyÃ©. Sinon, null est renvoyÃ©.
+	 * @return Block si dur | Null sinon
+	 */
+	public Block blockDurGauche(Niveau niveau) {
+		double minY = this.imagePersonnage.getLayoutBounds().getMinY();
+		double maxY = this.imagePersonnage.getLayoutBounds().getMaxY();
+		double minX = this.imagePersonnage.getLayoutBounds().getMinX();
+		if(minY>0) {
+			if((((int) minX-2)/Block.blockXSize 
+					+ (((int) maxY -10)/Block.blockXSize)
+					* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size() 
+					|| (((int) minX -2)/Block.blockXSize 
+							+ (((int) minY -10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length) <= niveau.getBlocksNiveau().size()) {
+				if(niveau.getBlocksNiveau().get((((int) minX-2)/Block.blockXSize 
+						+ (((int) maxY -10)/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					System.out.println("Y a bien un bloc");
+					return niveau.getBlocksNiveau().get((((int) minX -2)/Block.blockXSize 
+							+ (((int) maxY -10)/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else if (niveau.getBlocksNiveau().get((((int) minX -2)/Block.blockXSize 
+						+ (((int) minY )/Block.blockXSize)
+						* niveau.getMatriceNiveau()[0].length)).isHardBlock()) {
+					System.out.println("y a bien ce bloc");
+					return niveau.getBlocksNiveau().get((((int) minX -2)/Block.blockXSize 
+							+ (((int) minY )/Block.blockXSize)
+							* niveau.getMatriceNiveau()[0].length));
+				} else {
+					return null;
+				}
+			} else {
+				return null;
+			}
 		} else {
 			return null;
-		}
-		
+		}	
 	}
-	
-	public boolean getDeplacementGauche() {
-		return this.deplacementGauche;
-	}
-	
-	public boolean getDeplacementDroite() {
-		return this.deplacementDroite;
-	}
-	
 
 	/**
 	 * Permet de changer la variable deplacementGauche
-	 * @param deplacementGauche
+	 * @param deplacementGauche booleen true si il se dÃ©place sur la gauche | false si il ne se dÃ©place pas sur la droite
 	 */
 	public void setDeplacementGauche(boolean deplacementGauche) {
 		this.deplacementGauche = deplacementGauche;
 	}
 
 	/**
-	 * Permet de changer la variable deplacementDroite
-	 * @param deplacementDroite
+	 * Permet de changer la variable deplacementGauche
+	 * @param deplacementGauche booleen true si il se dÃ©place sur la gauche | false si il ne se dÃ©place pas sur la droite
 	 */
 	public void setDeplacementDroite(boolean deplacementDroite) {
 		this.deplacementDroite = deplacementDroite;
 	}
 
 	/**
-	 * Retourne un booleen qui informe si le lutin se déplace vers la gauche ou pas
-	 * @return boolean true=Le lutin se déplace vers la gauche ; false=Le lutin ne se déplace pas vers la gauche
+	 * Retourne un booleen qui informe si le lutin se dÃ©place vers la gauche ou pas
+	 * @return boolean true=Le lutin se dÃ©place vers la gauche ; false=Le lutin ne se dÃ©place pas vers la gauche
 	 */
 	public boolean isDeplacementGauche() {
 		return this.deplacementGauche;
 	}
 
 	/**
-	 * Retourne un booleen qui informe si le lutin se déplace vers la gauche ou pas
-	 * @return boolean true=Le lutin se déplace vers la droite ; false=Le lutin ne se déplace pas vers la droite
+	 * Retourne un booleen qui informe si le lutin se dÃ©place vers la gauche ou pas
+	 * @return boolean true=Le lutin se dÃ©place vers la droite ; false=Le lutin ne se dÃ©place pas vers la droite
 	 */
 	public boolean isDeplacementDroite() {
 		return this.deplacementDroite;
 	}
 
 	/**
-	 * Retourne l'image du lutin sur la vue
+	 * Retourne l'image du personnage.
 	 * @return ImageView l'image du lutin
 	 */
 	public ImageView getImage() {
 		return this.imagePersonnage;
 	}
 
-	public void setRaterri(boolean b) {
-		this.raterri=b;
-		
+	/**
+	 * Mets Ã  jour l'attribut ratteri en fonction de si le lutin est entrain de raterrir ou non
+	 * @param ratteri true=il ratteri | false=il ne ratteri pas
+	 */
+	public void setRaterri(boolean ratteri) {
+		this.raterri=ratteri;
+
 	}
-	
+
+	/**
+	 * Retourne si le personnage est entrain de raterrir ou pas
+	 * @return
+	 */
 	public boolean getRaterri() {
 		return this.raterri;
 	}
-	
+
 	/**
-	 * Retourne la valeur du timer qui permet de gérer le saut du lutin
-	 * @return int la valeur du timer qui permet de gérer le saut du lutin
+	 * Retourne la valeur du timer qui permet de gÃ©rer le saut du lutin
+	 * @return int la valeur du timer qui permet de gÃ©rer le saut du lutin
 	 */
 	public int getTimerSaut() {
 		return this.timerSaut;
 	}
 
 	/**
-	 * Permet de mettre à jour la valeur du timer de saut du lutin
+	 * Permet de mettre Ã  jour la valeur du timer de saut du lutin
 	 * @param timerSaut
 	 */
 	public void setTimerSaut(int timerSaut) {
@@ -274,7 +347,7 @@ public abstract class Personnage {
 
 
 	/**
-	 * Permet de mettre à jour si le lutin est entrain de sauter ou non
+	 * Permet de mettre Ã  jour si le lutin est entrain de sauter ou non
 	 * @param saut boolean true=Le lutin est entrain de sauter ; false=Le lutin n'est pas entrain de sauter
 	 */
 	public void setSaut(boolean saut) {
@@ -287,31 +360,6 @@ public abstract class Personnage {
 	 */
 	public boolean isSaut() {
 		return this.saut;
-	}
-	
-	public double getCoordMapMinX() {
-		return this.coordMapMinX;
-	}
-
-	public void setCoordMapMinX(double coord) {
-		this.coordMapMinX = coord;
-	}
-
-
-	public double getCoordMapCentreX() {
-		return this.coordMapCentreX;
-	}
-
-	public double getCoordMapMaxX() {
-		return this.coordMapMaxX;
-	}
-
-	public void setCoordMapCentreX(double coordMapX) {
-		this.coordMapCentreX = coordMapX;
-	}
-
-	public void setCoordMapMaxX(double coordMapX) {
-		this.coordMapMaxX = coordMapX;
 	}
 
 }

@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import controller.FileManager;
+import model.FileManager;
+import model.Lutin;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import model.Block;
 import model.BonhommeDeNeige;
-import model.Lutin;
+import model.Chronometre;
 import model.PereNoel;
-import model.Personnage;
-import model.SolidBlock;
-import model.TransparentBlock;
 import model.Vie;
 
+/**
+ * Classe abstraite mère de nos niveaux. C'est ici que sont générés les niveaux.
+ */
 public abstract class Niveau {
 	
-	private Label chronometre;
+	private Chronometre chronometre;
 	private Group root;
 	private ArrayList<Block> colisionBlocks;
 	private ArrayList<Block> generatedMap;
@@ -29,14 +29,19 @@ public abstract class Niveau {
 	private ArrayList<PereNoel> bossAffiche;
 	private double coordX;
 	private double coordY;
-	private int[][] generationTab;
+	private int[][] matriceNiveau;
 	protected Vie vie;
 	
 
-	public Niveau(Group root, int[][] generationTab) {
+	/**
+	 * Initialisation de notre Niveau
+	 * @param root le contenu de notre fenêtre
+	 * @param generationTab la matrice du niveau que l'on va générer
+	 */
+	public Niveau(Group root, int[][] matriceNiveau) {
 		root.getChildren().clear();
-		this.generationTab = generationTab;
-		this.chronometre = new Label("00.00.00");
+		this.matriceNiveau = matriceNiveau;
+		this.chronometre = new Chronometre(new Label("00.00.00"));
 		this.root=root;
 		this.generatedMap = new ArrayList<Block>();
 		this.colisionBlocks = new ArrayList<Block>();
@@ -44,30 +49,31 @@ public abstract class Niveau {
 		this.bossAffiche = new ArrayList<PereNoel>();
 		this.coordX=0;
 		this.coordY=0;
-		
 	}
 	
+	/**
+	 * Ajoute les entités sur notre niveau (tel que le lutin, les bonhommes de neige... etc)
+	 */
 	public abstract void addEntities();
 	
 	/**
-	 * Fonction permettant de placer les blocs sur notre vue suivant la disposition définie sur la variable "generationTab"
+	 * Génère le niveau en fonction des entiers présents sur la matrice.
+	 * @param generationTab la matrice du niveau
 	 */
 	public void generateLevel(int[][] generationTab) {
 		for(int i=0; i<generationTab.length; i++) {
 			for(int j=0;j<generationTab[i].length; j++) {
-				Block newBlock = getImageType(generationTab[i][j]);
-				root.getChildren().add(newBlock.getBlock());
-				this.generatedMap.add(newBlock);
-				addBlockToList(newBlock);
-				newBlock.getBlock().setX(this.coordX);
-				newBlock.getBlock().setY(this.coordY);
-				if(isMobBlock(generationTab[i][j])) {
-					BonhommeDeNeige mob = new BonhommeDeNeige(new ImageView(new Image("mob1.png")), this.coordX, this.coordY, this);
+				Block block = generateBlock(generationTab[i][j]);
+				root.getChildren().add(block.getBlock());
+				this.generatedMap.add(block);
+				addBlockToList(block);
+				if(block.isMobBlock()) {
+					BonhommeDeNeige mob = new BonhommeDeNeige(this.coordX, this.coordY);
 					root.getChildren().addAll(mob.getImage());
 					this.mobAffiche.add(mob);
 				}
-				if(isBossBlock(generationTab[i][j])) {
-					PereNoel boss = new PereNoel(new ImageView(new Image("perenoel.png")), this.coordX, this.coordY, this);
+				if(block.isBossBlock()) {
+					PereNoel boss = new PereNoel(this.coordX, this.coordY);
 					root.getChildren().addAll(boss.getImage());
 					this.bossAffiche.add(boss);
 				}
@@ -76,72 +82,92 @@ public abstract class Niveau {
 			this.coordX=0;
 			this.coordY+=64;
 		}
-		root.getChildren().add(this.chronometre);
-		System.out.println(root.getChildren().get(0));
-	}
-	
-	public boolean isMobBlock(int i) {
-		if(i==20) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean isBossBlock(int i) {
-		if(i==19) {
-			return true;
-		}
-		return false;
+		root.getChildren().add(this.chronometre.getChronometre());
 	}
 
-	public void addBossAffiche(PereNoel boss) {
+	/**
+	 * Fonction ajoutant un boss au niveau
+	 * @param boss le boss
+	 */
+	public void addBoss(PereNoel boss) {
 		this.bossAffiche.add(boss);
 	}
 	
-	public ArrayList<PereNoel> getBossAffiche() {
+	/**
+	 * Retourne la liste de boss contenu sur le niveau.
+	 * @return ArrayList<PereNoel> la liste de boss
+	 */
+	public ArrayList<PereNoel> getBoss() {
 		return this.bossAffiche;
 	}
 	
 	/**
-	 * Fonction retournant le nom de l'image à placer sur notre vue, en fonction du chiffre qui a été défini sur la variable "generationTab"
-	 * @param chiffre un chiffre qui a été défini sur la variable "generationTab"
+	 * Fonction retournant le nom de l'image à placer sur notre vue, en fonction du chiffre qui a été défini sur la variable "matriceNiveau"
+	 * @param chiffre un chiffre qui a été défini sur la variable "matriceNiveau"
+	 * @return 
 	 * @return String le nom de l'image à placer
 	 */
-	public Block getImageType(int chiffre) {
+	public Block generateBlock(int chiffre) {
+		Block block;
 		switch(chiffre) {
 		case 0:
-			return new TransparentBlock("ciel.png");
+			block = new Block("ciel.png");
+			break;
 		case 1:
-			return new SolidBlock("bloc1.png");
+			block = new Block("bloc1.png");
+			block.setHardBlock(true);
+			break;
 		case 2:
-			return new SolidBlock("bloc2.png");
+			block = new Block("bloc2.png");
+			block.setHardBlock(true);
+			break;
 		case 3:
-			return new TransparentBlock("cielNuage1png.png");
+			block = new Block("cielNuage1png.png");
+			break;
 		case 4:
-			return new TransparentBlock("cielNuage2.png");
+			block = new Block("cielNuage2.png");
+			break;
 		case 5:
-			return new SolidBlock("barreFinale1.png");
+			block = new Block("barreFinale1.png");
+			block.setBlockDeFin(true);
+			break;
 		case 6:
-			return new SolidBlock("barreFinale2.png");
+			block = new Block("barreFinale2.png");
+			block.setBlockDeFin(true);
+			break;
 		case 7:
-			return new SolidBlock("mob1.png");
-		case 20:
-			return new TransparentBlock("ciel.png");
+			block = new Block("blocpiege.png");
+			block.setHardBlock(false);
+			break;
+		case 8:
+			block = new Block("ciel.png");
+			block.setBossBlock(true);
+			break;
+		case 9:
+			block = new Block("ciel.png");
+			block.setMobBlock(true);
+			break;
 		default:
-			return new TransparentBlock("ciel.png");
+			block = new Block("ciel.png");
+			break;
 		}
+		
+		block.getBlock().setX(this.coordX);
+		block.getBlock().setY(this.coordY);
+		return block;
 	}
 	
+	/**
+	 * Retourne l'objet vie contenu sur notre Niveau
+	 * @return Vie la vie du lutin
+	 */
 	public Vie getVie() {
 		return this.vie;
 	}
 	
-	
-	
 	/**
-	 * Fonction permettant d'ajouter les blocks de type "sol" à notre liste de blocks de sol
-	 * @param fond le nom de l'image à vérifier
-	 * @param image l'image à ajouter dans le cas où son nom correspond à un block de type sol
+	 * Fonction permettant d'ajouter les blocks de type "dur" à notre liste de blocks dur
+	 * @param Block le block à ajouter dans le cas où il est de type sol
 	 */
 	public void addBlockToList(Block block) {
 		if(block.isHardBlock()) {
@@ -149,59 +175,51 @@ public abstract class Niveau {
 		}
 	}
 	
-	public void addMobAffiche(BonhommeDeNeige mob) {
+	/**
+	 * Méthode ajoutant des bonhommes de neige à notre liste
+	 * @param mob le bonhomme de neige
+	 */
+	public void addBonhommeNeige(BonhommeDeNeige mob) {
 		this.mobAffiche.add(mob);
 	}
 	
-	public ArrayList<BonhommeDeNeige> getMobAffiche() {
+	/**
+	 * Retourne la liste des bonhommes de neiges contenus sur notre niveau
+	 * @return ArrayList<BonhommeNeige> la liste des bonhommes de neige
+	 */
+	public ArrayList<BonhommeDeNeige> getBonhommesNeige() {
 		return this.mobAffiche;
 	}
 	
 	/**
-	 * Retourne le tableau de génération de notre map
+	 * Retourne la matrice de notre niveau
+	 * @return int[][] la matrice de notre niveau
 	 */
-	public int[][] getGenerationMap() {
-		return this.generationTab;
+	public int[][] getMatriceNiveau() {
+		return this.matriceNiveau;
 	}
 	
 	/**
-	 * Retourne notre liste de blocks qui soumettent notre lutin à une colision
-	 * @return la liste de blocks
+	 * Retourne notre liste des blocks durs qui composent notre niveau.
+	 * @return ArrayList<Block> la liste des blocks durs du niveau
 	 */
-	public ArrayList getColisionBlocks() {
+	public ArrayList<Block> getBlocksDurs() {
 		return this.colisionBlocks;
 	}
 	
 	/**
 	 * Retourne la liste des images contenues sur notre vue sous la forme d'une liste
-	 * @return la liste d'images
+	 * @return ArrayList<Block> la liste des blocks du niveau
 	 */
-	public ArrayList<Block> getGeneration() {
+	public ArrayList<Block> getBlocksNiveau() {
 		return this.generatedMap;
 	}
 	
-	public Label getChronometre() {
+	/**
+	 * Retourne le Label du chronomètre qui figure sur notre niveau.
+	 * @return Label le chronomètre
+	 */
+	public Chronometre getChronometre() {
 		return this.chronometre;
-	}
-	
-	public Image getSkin() {
-		FileManager fileManager = new FileManager();
-		ImageView skinLutin = new ImageView();
-		HashMap<String, Integer> read = (HashMap<String, Integer>) fileManager.readFile("skin");
-		for(Map.Entry<String, Integer> entry : read.entrySet()) {
-		    Integer skin = entry.getValue();
-		    switch(skin) {
-		    case 0 : 
-		    	return new Image("lutinBleu.png");
-		    case 1 : 
-		    	return new Image("lutinRouge.png");
-		    case 2 : 
-		    	return new Image("lutinVert.png");
-		    default : 
-		    	return new Image("lutinVert.png");
-		    }
-		
-		}
-		return new Image("lutinVert.png");
 	}
 }

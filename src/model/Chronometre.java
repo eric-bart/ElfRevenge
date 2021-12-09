@@ -3,6 +3,9 @@ package model;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 
+/**
+ * 
+ */
 public class Chronometre {
 
 	private Label chronometre;
@@ -21,7 +24,6 @@ public class Chronometre {
 	
 	/**
 	 * Incrémente le chronomètre en suivant les règles de temps et change le texte de notre chronomètre.
-	 * 
 	 */
 	public void ajouter() {
 		if(this.secondes<59) {
@@ -39,9 +41,22 @@ public class Chronometre {
 	}
 	
 	/**
-	 * Met les valeurs minutes, secondes et heures sous forme de String dans le but de le mettre sur notre Label chronomètre
-	 * 
+	 * Calcule les points en fonction du résultat effectué sur le chrono
+	 * @return le nombre de points de base (30000) - 100 * le nombre total d'heures / 2
 	 */
+	public int calculerPoints() {
+		int pts = 30000;
+		int nbTotalSecondes = this.heures*60*60+this.minutes*60+this.secondes;
+		if(this.minutes<10) {
+			return pts - 100* (nbTotalSecondes / 2);
+		}
+		return 0;
+	}
+	
+	public Label getChronometre() {
+		return this.chronometre;
+	}
+	
 	public String toString() {
 		String strMinutes="";
 		String strSecondes="";
@@ -61,7 +76,6 @@ public class Chronometre {
 		} else {
 			strSecondes+=this.secondes;
 		}
-		
 		return strHeures+"."+strMinutes+"."+strSecondes;
 	}
 }

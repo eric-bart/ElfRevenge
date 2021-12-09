@@ -1,68 +1,42 @@
 package controller;
 
+import application.Jeu;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import view.Intro;
 import model.GameState;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
+/**
+ * Classe de notre controlleur de la vue "INTRO"
+ */
 public class IntroController {
 
 	private Group root;
-    private Scene scene;
-    private GameState etat;
+	private Scene scene;
 	public MediaView mediaView;
+	@SuppressWarnings("unused")
+	private Intro intro;
 	
-	public IntroController(Group root, Scene scene) {
-		this.root=root;
-		this.scene=scene;
-		this.etat = GameState.INTRO;
+	public IntroController() {
+		this.root=Jeu.monJeu.getGameRoot();
+		this.scene=Jeu.monJeu.getGameScene();
+		this.intro = new Intro(this.root);
 	}
-	
+
 	/**
-	 * Méthode qui met sous écoute les touches du claviers et change l'état du jeu en fonction de l'option du menu qui est sélectionnée
+	 * Affiche la vue "INTRO" et mets en place l'écoute des touches au sein de la vue "INTRO"
 	 */
 	public void intro() {
-		Intro intro = new Intro(this.root);
+		// Si l'utilisateur appuie sur n'importe quelle touche, retour à l'état "MENU" et effacement de l'eventHandler de la page "INTRO"
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent keyEvent) {
-				switch (keyEvent.getCode()) {
-				case ESCAPE:
-					application.Main.setGameState(GameState.MENU);
-					break;
-				case ENTER:
-					application.Main.setGameState(GameState.MENU);
-					break;
-				case SPACE:
-					application.Main.setGameState(GameState.MENU);
-					break;
-				case LEFT: {
-					application.Main.setGameState(GameState.MENU);
-					break;
-				}
-				case RIGHT: {
-					application.Main.setGameState(GameState.MENU);
-					break;
-				}
-				case UP: {
-					application.Main.setGameState(GameState.MENU);
-					break;
-				}
-				case DOWN: {
-					application.Main.setGameState(GameState.MENU);
-					break;
-				}
-				default: 
-					break;
-				}
+				keyEvent.consume();
+				Jeu.monJeu.changeGameState(GameState.MENU);
 			}
 		});
 	}
+
 }

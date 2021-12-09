@@ -1,6 +1,7 @@
 package model;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
+import application.Jeu;
 
 public class OrgeCustomisation {
 
@@ -28,22 +29,22 @@ public class OrgeCustomisation {
 			case 0:
 				//Le sucre d'orge pointe sur "Bleu"
 				this.orge.setY(520);
-				this.orge.setX((application.Main.fenetre.getWidth()/2)-380);
+				this.orge.setX((Jeu.monJeu.getGameStage().getWidth()/2)-380);
 				break;
 			case 1: 
 				//Le sucre d'orge pointe sur "Rouge"
 				this.orge.setY(520);
-				this.orge.setX((application.Main.fenetre.getWidth()/2)-50);
+				this.orge.setX((Jeu.monJeu.getGameStage().getWidth()/2)-50);
 				break;
 			case 2:
 				//Le sucre d'orge pointe sur "Vert"
 				this.orge.setY(520);
-				this.orge.setX((application.Main.fenetre.getWidth()/2)+290);
+				this.orge.setX((Jeu.monJeu.getGameStage().getWidth()/2)+290);
 				break;
 			default:
 				//Le sucre d'orge pointe sur "Bleu"
 				this.orge.setY(520);
-				this.orge.setX((application.Main.fenetre.getWidth()/2)-380);
+				this.orge.setX((Jeu.monJeu.getGameStage().getWidth()/2)-380);
 				break;
 			}
 		}

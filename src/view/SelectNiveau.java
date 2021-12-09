@@ -4,6 +4,9 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Classe de la vue "SELECTION NIVEAU"
+ */
 public class SelectNiveau {
 
 	private ImageView background = new ImageView(new Image("selecteurNiveau.png"));
@@ -11,14 +14,21 @@ public class SelectNiveau {
 
 	public SelectNiveau(Group root) {
 		root.getChildren().clear();
-		double taille = this.background.getLayoutBounds().getMaxX();
 		root.getChildren().addAll(this.background, this.orgeSelection);
 	}
 
+	/**
+	 * Retourne le background "SELECT NIVEAU"
+	 * @return ImageView background
+	 */
 	public ImageView getBackground() {
 		return this.background;
 	}
 
+	/**
+	 * Retourne l'image de l'orge notre vue "SELECT NIVEAU"
+	 * @return ImageView orge
+	 */
 	public ImageView getOrge() {
 		return this.orgeSelection;
 	}
