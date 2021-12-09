@@ -1,64 +1,83 @@
 package controller;
 
+import application.Jeu;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.GameState;
-import model.Orge;
+import model.OrgeMenu;
 import view.Menu;
 
+/**
+ * MenuController, le contrôleur de la vue Menu
+ */
 public class MenuController {
 
-    private Group root;
-    private Scene scene;
-    private GameState etat;
-    
-    public MenuController(Group root, Scene scene) {
-    	this.root=root;
-    	this.scene=scene;
-    	this.etat = GameState.MENU;
-    }
+	private Group root;
+	private Scene scene;
 
+	public MenuController() {
+		this.root=Jeu.monJeu.getGameRoot();
+		this.scene=Jeu.monJeu.getGameScene();
+	}
+
+	/**
+	 * Méthode qui met sous écoute les touches du claviers et change l'état du jeu en fonction de l'option du menu qui est sélectionnée
+	 */
 	public void menu() {
-    	Menu menu = new Menu(this.root);
-    	Orge orge = new Orge(menu.getOrge());
-    	scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-             @Override
-             public void handle(KeyEvent keyEvent) {
-                 if(keyEvent.getCode() == KeyCode.ENTER) {
-                     keyEvent.consume();
-                     switch(orge.getOptions()[orge.getSelectedOpt()]) {
-                         case "JOUER":
-                             application.Main.setGameState(GameState.SELECT_NIVEAU);
-                             break;
-                         case "CUSTOMISER":
-                        	 application.Main.setGameState(GameState.CUSTOMISATION);
-                             break;
-                         case "OPTIONS":
-                        	 application.Main.setGameState(GameState.PARAMETRES);
-                             break;
-                     }
-                     return;
-                 }
-                 switch(keyEvent.getCode()) {
-                 case UP:
-                     if(orge.getSelectedOpt() > 0) {
-                         orge.setSelectedOpt(orge.getSelectedOpt()-1);
-                         orge.orgeAnimation();
-                     }
-                     break;
-                 case DOWN:
-                     if(orge.getSelectedOpt() < 2) {
-                    	 orge.setSelectedOpt(orge.getSelectedOpt()+1);
-                         orge.orgeAnimation();
-                     }
-                     break;
-             }
-
-             }
-         });
-    }
+		Menu menu = new Menu(this.root);
+		OrgeMenu orge = new OrgeMenu(menu.getOrge());
+		//On récupère les évenements de type "Touche pressée"
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent keyEvent) {
+				//Selon la touche qui a été pressée
+				switch(keyEvent.getCode()) {
+				case UP:
+					//Si la flèche "HAUT" a été pressée
+					//Si l'orge n'est pas déjà à la position maximale, on décrémente l'index de 1
+					if(orge.getSelectedOpt() > 0) {
+						orge.setSelectedOpt(orge.getSelectedOpt()-1);
+						orge.orgeAnimation();
+					}
+					break;
+				case DOWN:
+					//Si la flèche "BAS" a été pressée
+					//Si l'orge n'est pas déjà à la position maximale, on incrémente l'index de 1
+					if(orge.getSelectedOpt() < 2) {
+						orge.setSelectedOpt(orge.getSelectedOpt()+1);
+						orge.orgeAnimation();
+					}
+					break;
+				case ENTER:
+					//Si la touche entrer a été pressée, on détruit l'écoute d'évènement.
+					keyEvent.consume();
+					//Selon la position de l'orge rapportée au tableau contenant toutes les options disponibles sur le menu
+					switch(orge.getOptions()[orge.getSelectedOpt()]) {
+					case "JOUER":
+						//Si la chaîne de caractère est "JOUER"
+						//On met l'état du jeu à "SELECT_NIVEAU"
+						Jeu.monJeu.changeGameState(GameState.SELECT_NIVEAU);
+						break;
+					case "CUSTOMISER":
+						//Si la chaîne de caractère est "CUSTOMISER"
+						//On met l'état du jeu à "CUSTOMISATION"
+						Jeu.monJeu.changeGameState(GameState.CUSTOMISATION);
+						break;
+					case "CONTROLES":
+						//Si la chaîne de caractère est "CONTROLES"
+						//On met l'état du jeu à "CONTROLES"
+						Jeu.monJeu.changeGameState(GameState.CONTROLES);
+						break;
+					default:
+						break;
+					}
+				default:
+					break;
+				}
+			}
+		});
+	}
 
 }
