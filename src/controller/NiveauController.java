@@ -77,18 +77,16 @@ public class NiveauController {
 			boucle = new AnimationTimer() {
 				@Override
 				public void handle(long now) {
-					if(now - lastFrame >= 001_600_000) { // delay de 16,33ms
-						lastFrame=now;
-						//Ajoute une seconde au chrono toutes les 1s
-						if (now - lastUpdate >= 1000_000_000) { // delay de 1000 ms
-							lutin.setRebond(false);
-							niveau.getChronometre().ajouter();
-							lastUpdate = now;
-						}
-						lutinAnimation(now, lutin);
-						bonhommeNeigeAnimation(now, lutin);
-						pereNoelAnimation(now, lutin);
+					lastFrame=now;
+					//Ajoute une seconde au chrono toutes les 1s
+					if (now - lastUpdate >= 1000_000_000) { // delay de 1000 ms
+						lutin.setRebond(false);
+						niveau.getChronometre().ajouter();
+						lastUpdate = now;
 					}
+					lutinAnimation(now, lutin);
+					bonhommeNeigeAnimation(now, lutin);
+					pereNoelAnimation(now, lutin);
 				}
 			};
 			boucle.start();
@@ -96,7 +94,7 @@ public class NiveauController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Gère la partie boucle d'animation de notre lutin
 	 * @param now le temps actuel en milisecondes de la boucle animationTimer
@@ -104,9 +102,7 @@ public class NiveauController {
 	 */
 	public void lutinAnimation(long now, Lutin lutin) {
 		if(lutin.blocDurDessous(niveau)!=null) {
-			System.out.println("coucou");
 			if(lutin.isDansLeCiel(niveau)) {
-				System.out.println("coucou2");
 				lutin.tombe(niveau);
 			}
 		} else {
@@ -129,15 +125,15 @@ public class NiveauController {
 			Jeu.monJeu.changeGameState(GameState.MENU);
 		}
 		if (lutin.blocDurDessous(niveau) != null) {
-				if(lutin.blocDurDessous(niveau).getBlockName().equals("blocSpecial.png")) {
-					lastSautUpdate=now;
-					estSurBlocSpecial = true;
-					lutin.setVitesse(7);
-				} else if(lutin.blocDurDessous(niveau).getBlockName().equals("blocSpecial2.png")) {
-					lastSautUpdate=now;
-					estSurBlocSpecial = true;
-					lutin.setG(0.3);
-				}
+			if(lutin.blocDurDessous(niveau).getBlockName().equals("blocSpecial.png")) {
+				lastSautUpdate=now;
+				estSurBlocSpecial = true;
+				lutin.setVitesse(7);
+			} else if(lutin.blocDurDessous(niveau).getBlockName().equals("blocSpecial2.png")) {
+				lastSautUpdate=now;
+				estSurBlocSpecial = true;
+				lutin.setG(0.3);
+			}
 		}
 		if(estSurBlocSpecial){
 			if (now - lastSautUpdate >= 5000_000_000L) { 
@@ -168,7 +164,7 @@ public class NiveauController {
 			Jeu.monJeu.changeGameState(GameState.SELECT_NIVEAU);
 		}
 	}
-	
+
 	/**
 	 * Gère la partie boucle d'animation des bonhommes de neiges au sein de notre niveau
 	 * @param now le temps actuel en milisecondes de la boucle animationTimer
@@ -223,7 +219,7 @@ public class NiveauController {
 
 		niveau.getBonhommesNeige().removeAll(mobsMorts);
 	}
-	
+
 	/**
 	 * Gère la partie boucle d'animation du père noel au sein de notre niveau
 	 * @param now le temps actuel en milisecondes de la boucle animationTimer
@@ -233,8 +229,11 @@ public class NiveauController {
 		if(!niveau.getBoss().isEmpty()) {
 			niveau.getBoss().forEach(e -> {
 				e.getImage().toFront();
-				if(now - lastUpdate >= 1000_000_000) {
+				if(now - lastUpdate >= 750_000_000) {
 					e.sauter(niveau);
+					lastUpdate = now;
+				}
+				if(e.isDansLeCiel(niveau)) {
 					lastUpdate = now;
 				}
 				if(e.blocDurDessous(niveau)!=null) {
