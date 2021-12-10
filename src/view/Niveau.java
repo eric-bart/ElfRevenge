@@ -147,6 +147,10 @@ public abstract class Niveau {
 			block = new Block("ciel.png");
 			block.setMobBlock(true);
 			break;
+		case 10:
+			block = new Block("blocSpecial.png");
+			block.setHardBlock(true);
+			break;
 		default:
 			block = new Block("ciel.png");
 			break;

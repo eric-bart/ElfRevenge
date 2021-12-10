@@ -105,6 +105,15 @@ public class NiveauController {
 						if (lutin.isDeplacementGauche()) {
 							lutin.seDeplace(niveau);
 						}
+						if (lutin.blocDurDessous(niveau) != null) {
+							if (lutin.blocDurDessous(niveau).getBlockName().equals("blocSpecial.png") ) {
+								lutin.setVitesse(7);
+							}
+						}
+						if (now - lastUpdate >= 5000_000_000L && lutin.getVitesse() == 7) { // delay de 5000 ms
+							lutin.setVitesse(5);
+							lastUpdate = now;
+						}
 
 						if(!niveau.getBonhommesNeige().isEmpty()) {
 							niveau.getBonhommesNeige().forEach(e -> {

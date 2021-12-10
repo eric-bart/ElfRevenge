@@ -263,4 +263,13 @@ public class Lutin extends Personnage {
 	public int getVie() {
 		return vie;
 	}
+
+	public void setVitesse(double i) {
+		this.VITESSE_DEPLACEMENT = i;
+		
+	}
+
+	public double getVitesse() {
+		return this.VITESSE_DEPLACEMENT;
+	}
 }
