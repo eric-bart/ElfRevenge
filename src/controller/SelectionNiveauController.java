@@ -15,6 +15,7 @@ import model.FileManager;
 import model.GameState;
 import model.OrgeSelectNiveau;
 import view.SelectNiveau;
+import model.FileManager;
 
 /**
  * Classe de notre controlleur de la vue "SELECTION_NIVEAU"

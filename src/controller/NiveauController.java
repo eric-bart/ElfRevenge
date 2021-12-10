@@ -199,20 +199,20 @@ public class NiveauController {
 							case NIVEAU1 : 
 								points+=niveau.getChronometre().calculerPoints();
 								System.out.println(points);
-								((Niveau1) niveau).fini();
+								((Niveau1) niveau).fini(points);
 								break;
 							case NIVEAU2 : 
 								points+=niveau.getChronometre().calculerPoints();
-								((Niveau2) niveau).fini();
+								((Niveau2) niveau).fini(points);
 								break;
 							case NIVEAU3 : 
 								points+=niveau.getChronometre().calculerPoints();
-								((Niveau3) niveau).fini();
+								((Niveau3) niveau).fini(points);
 								break;
 							default:
 								break;
 							}
-							Jeu.monJeu.changeGameState(GameState.SELECT_NIVEAU);
+							Jeu.monJeu.changeGameState(GameState.MENU);
 						}
 					}
 				//}

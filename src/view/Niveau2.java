@@ -62,13 +62,16 @@ public class Niveau2 extends Niveau {
 		root.getChildren().add(this.vie.getLabelVie());
 	}
 	
-	public static void fini() {
+	public void fini(int points) {
 		FileManager fileManager = new FileManager();
 		@SuppressWarnings("unchecked")
 		HashMap<String, DonneesNiveau> recup = (HashMap<String, DonneesNiveau>)fileManager.readFile("donnees");
-		DonneesNiveau d1 = recup.get("niveau2");
-		d1.setFini(true);
-		recup.put("niveau2", d1);
+		DonneesNiveau d2 = recup.get("niveau2");
+		d2.setFini(true);
+		if(d2.getScoreMax()<points) {
+			d2.setScoreMax(points);
+		}
+		recup.put("niveau2", d2);
 		fileManager.writeToFile("donnees", recup);
 	}
 }

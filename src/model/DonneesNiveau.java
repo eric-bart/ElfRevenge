@@ -43,7 +43,9 @@ public class DonneesNiveau implements Serializable {
 	public void setScoreMax(int scoreMax) {
 		this.scoreMax = scoreMax;
 	}
-	
+	public String scoreString() {
+		return ""+this.getScoreMax();
+	}
 	public String toString() {
 		return "Est fini : "+ this.isFini() + " score max : " + this.getScoreMax();
 	}
