@@ -1,24 +1,86 @@
 package view;
 
+import java.util.HashMap;
+
+import model.FileManager;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import model.DonneesNiveau;
+import model.Lutin;
+import model.Vie;
 
-public class Niveau1 {
+/**
+ * Classe correspondant à notre Niveau1.
+ */
+public class Niveau1 extends Niveau {
 
-	private ImageView background = new ImageView(new Image("background2.png"));
-	private ImageView elf = new ImageView(new Image("lutin4.png"));
+	private Lutin lutin;
+	
+	/**
+	 * Tableau représentant la map qui va être générée
+	 * 0 = bloc de CIEL
+	 * 1 = bloc de SOL
+	 */
+	private static final int[][] matriceNiveau = 
+		{{2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+	            {2,0,0,3,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,2},
+	            {2,0,0,0,0,0,1,0,0,1,0,0,0,0,0,3,0,0,0,2},
+	            {2,0,0,0,1,0,0,0,9,2,0,0,0,10,0,11,0,0,0,2},
+	            {2,1,1,1,2,1,1,1,1,2,1,7,1,1,1,1,0,0,0,2},
+	            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+	            {2,0,0,0,3,0,0,0,0,0,3,0,4,0,0,0,0,0,0,2},
+	            {2,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,2},
+	            {2,0,0,0,0,0,0,0,0,1,0,9,0,0,1,0,0,0,0,2},
+	            {2,0,0,0,0,0,1,0,0,2,1,1,1,1,1,1,7,1,1,2},
+	            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+	            {2,0,0,0,0,0,0,0,0,0,0,4,0,0,0,3,0,0,0,2},
+	            {2,6,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,2},
+	            {2,5,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,2},
+	            {2,1,1,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,2},
+	            {2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+	            {2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2}};
 
-	public Niveau1(Group root) {
-		root.getChildren().clear();
-		root.getChildren().addAll(this.background, this.elf);
-	}
+	private Group root;
 
-	public ImageView getBackground() {
-		return this.background;
+	public Niveau1(Group root, Lutin lutin) {
+		super(root, matriceNiveau);
+		this.lutin =  lutin;
+		this.vie = new Vie(lutin.getVie(), new Text(""+lutin.getVie()));
+		this.vie.setVie(2);
+		this.vie.getLabelVie();
+		this.root=root;
+		this.generateLevel(matriceNiveau);
+		this.addEntities();
 	}
 	
-	public ImageView getElf() {
-		return this.elf;
+	/**
+	 * Retourne le lutin
+	 * @return Lutin le lutin
+	 */
+	public Lutin getLutin() {
+		return this.lutin;
+	}
+	
+	@Override
+	public void addEntities() {
+		root.getChildren().add(this.lutin.getImage());
+		root.getChildren().add(this.vie.getLabelVie());
+	}
+	
+	/**
+	 * Mets le jeu à l'état fini au sein des fichiers de sauvegarde de notre jeu et fixe le score maximum qui a été réalisé.
+	 * @param points le score qui a été réalisé
+	 */
+	public void fini(int points) {
+		FileManager fileManager = new FileManager();
+		@SuppressWarnings("unchecked")
+		HashMap<String, DonneesNiveau> recup = (HashMap<String, DonneesNiveau>)fileManager.readFile("donnees");
+		DonneesNiveau d1 = recup.get("niveau1");
+		d1.setFini(true);
+		if(d1.getScoreMax()<points) {
+			d1.setScoreMax(points);
+		}
+		recup.put("niveau1", d1);
+		fileManager.writeToFile("donnees", recup);
 	}
 }
